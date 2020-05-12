@@ -1,3 +1,5 @@
+using Blockcore.Hub.Networking.Managers;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking.Entities;
 using Blockcore.Platform.Networking.Events;
 using Blockcore.Platform.Networking.Messages;
@@ -5,17 +7,19 @@ using PubSub;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.HubHandlers
 {
-   public class MessageMessageHandler : IMessageHandler, IHandle<MessageMessage>
+   public class MessageMessageHandler : IHubMessageHandler, IHandle<MessageMessage>
    {
-      private readonly Hub hub = Hub.Default;
+      private readonly PubSub.Hub hub = PubSub.Hub.Default;
       private readonly HubManager connectionManager;
+      private readonly HubConnectionManager connections;
 
-      public MessageMessageHandler(HubManager connectionManager)
+      public MessageMessageHandler(HubManager connectionManager, HubConnectionManager connections)
       {
          this.connectionManager = connectionManager;
-      }
+         this.connections = connections;
+   }
 
       public void Process(BaseMessage message, ProtocolType protocol, IPEndPoint endpoint = null, TcpClient client = null)
       {

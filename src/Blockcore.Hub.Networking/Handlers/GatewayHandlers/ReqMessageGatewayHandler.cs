@@ -1,13 +1,14 @@
+using Blockcore.Hub.Networking.Managers;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking.Entities;
 using Blockcore.Platform.Networking.Messages;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.GatewayHandlers
 {
-   public class ReqMessageGatewayHandler : IMessageGatewayHandler, IHandle<ReqMessage>
+   public class ReqMessageGatewayHandler : IGatewayMessageHandler, IHandle<ReqMessage>
    {
-
       private readonly GatewayManager manager;
 
       public ReqMessageGatewayHandler(GatewayManager manager)

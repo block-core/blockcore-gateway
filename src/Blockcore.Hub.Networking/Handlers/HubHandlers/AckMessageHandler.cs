@@ -1,3 +1,5 @@
+using Blockcore.Hub.Networking.Managers;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking.Entities;
 using Blockcore.Platform.Networking.Events;
 using Blockcore.Platform.Networking.Messages;
@@ -8,18 +10,20 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.HubHandlers
 {
-   public class AckMessageHandler : IMessageHandler, IHandle<AckMessage>
+   public class AckMessageHandler : IHubMessageHandler, IHandle<AckMessage>
    {
-      private readonly Hub hub = Hub.Default;
+      private readonly PubSub.Hub hub = PubSub.Hub.Default;
       private readonly ILogger<AckMessageHandler> log;
       private readonly HubManager manager;
+      private readonly HubConnectionManager connections;
 
-      public AckMessageHandler(ILogger<AckMessageHandler> log, HubManager manager)
+      public AckMessageHandler(ILogger<AckMessageHandler> log, HubManager manager, HubConnectionManager connections)
       {
          this.log = log;
          this.manager = manager;
+         this.connections = connections;
       }
 
       public void Process(BaseMessage message, ProtocolType Protocol, IPEndPoint EP = null, TcpClient Client = null)
@@ -32,7 +36,7 @@ namespace Blockcore.Platform.Networking.Handlers
          }
          else
          {
-            HubInfo CI = manager.Connections.GetConnection(msg.Id);
+            HubInfo CI = connections.GetConnection(msg.Id);
 
             if (CI.ExternalEndpoint.Address.Equals(EP.Address) & CI.ExternalEndpoint.Port != EP.Port)
             {

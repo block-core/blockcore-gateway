@@ -1,3 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Blockcore.Settings;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Blockcore.Platform.Networking;
+using Blockcore.Platform.Networking.Events;
 using Blockcore.Platform.Networking.Entities;
 using Blockcore.Platform.Networking.Events;
 using Microsoft.Extensions.Logging;
@@ -9,16 +29,56 @@ using System.Management;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Blockcore.Platform.Networking.Messages;
+using System;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
+using Blockcore.Platform.Networking;
+using Blockcore.Platform.Networking.Entities;
+using Blockcore.Settings;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Blockcore.Platform.Networking.Entities;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Blockcore.Hub.Networking.Services;
+using Blockcore.Platform;
+using Blockcore.Platform.Networking;
+using Blockcore.Settings;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Blockcore.Hub.Networking.Managers;
 
-namespace Blockcore.Platform.Networking
+namespace Blockcore.Hub.Networking.Managers
 {
-   public class HubManager
+   public class HubManager : IDisposable
    {
-      public IPEndPoint ServerEndpoint { get; }
+      readonly int retryInterval = 10;
+      private readonly ILogger<HubService> log;
+      private readonly ChainSettings chainSettings;
+      private readonly HubSettings hubSettings;
 
-      public HubInfo LocalHubInfo { get; }
+      private readonly PubSub.Hub hub = PubSub.Hub.Default;
 
-      public List<Ack> AckResponces { get; }
+      public IPEndPoint ServerEndpoint { get; private set; }
+
+      public HubInfo LocalHubInfo { get; private set; }
+
+      public List<Ack> AckResponces { get; private set; }
 
       private IPAddress internetAccessAdapter;
       private TcpClient TCPClient = new TcpClient();
@@ -50,24 +110,41 @@ namespace Blockcore.Platform.Networking
          }
       }
 
-      private readonly ILogger<HubManager> log;
-      private readonly MessageSerializer messageSerializer;
-      private readonly Hub hub = Hub.Default;
+      private MessageSerializer messageSerializer;
+      private IHubMessageProcessing messageProcessing;
+
+      private readonly IServiceProvider serviceProvider;
 
       public ConnectionManager Connections { get; }
 
-      public IMessageProcessingBase MessageProcessing { get; set; }
-
       public HubManager(
-          ILogger<HubManager> log,
-          ConnectionManager connectionManager,
-          MessageSerializer messageSerializer)
+         ILogger<HubService> log,
+         IOptions<ChainSettings> chainSettings,
+         IOptions<HubSettings> hubSettings,
+         IServiceProvider serviceProvider,
+         HubConnectionManager connectionManager)
       {
          this.log = log;
-         this.messageSerializer = messageSerializer;
+         this.chainSettings = chainSettings.Value;
+         this.hubSettings = hubSettings.Value;
+
+         this.serviceProvider = serviceProvider;
 
          Connections = connectionManager;
-         ServerEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5060);
+      }
+
+      public Task StartAsync(CancellationToken cancellationToken)
+      {
+         if (!hubSettings.Enabled)
+         {
+            log.LogInformation($"Hub Service is not enabled.");
+
+            return Task.CompletedTask;
+         }
+
+         log.LogInformation($"Start Hub Service for {chainSettings.Symbol}.");
+
+         ServerEndpoint = new IPEndPoint(IPAddress.Parse(hubSettings.Server), hubSettings.Port);
          LocalHubInfo = new HubInfo();
          AckResponces = new List<Ack>();
 
@@ -85,9 +162,99 @@ namespace Blockcore.Platform.Networking
          {
             LocalHubInfo.InternalAddresses.Add(IP);
          }
+
+         // To avoid circular reference we must resolve these in the startup.
+         messageProcessing = serviceProvider.GetService<IHubMessageProcessing>();
+         messageSerializer = serviceProvider.GetService<MessageSerializer>();
+
+         // Prepare the messaging processors for message handling.
+         MessageMaps maps = messageProcessing.Build();
+         messageSerializer.Maps = maps;
+
+         hub.Subscribe<ConnectionAddedEvent>(this, e =>
+         {
+            StringBuilder entry = new StringBuilder();
+
+            entry.AppendLine($"ConnectionAddedEvent: {e.Data.Id}");
+            entry.AppendLine($"                    : ExternalIPAddress: {e.Data.ExternalEndpoint}");
+            entry.AppendLine($"                    : InternalIPAddress: {e.Data.InternalEndpoint}");
+            entry.AppendLine($"                    : Name: {e.Data.Name}");
+
+            foreach (System.Net.IPAddress address in e.Data.InternalAddresses)
+            {
+               entry.AppendLine($"                    : Address: {address}");
+            }
+
+            log.LogInformation(entry.ToString());
+         });
+
+         hub.Subscribe<ConnectionRemovedEvent>(this, e =>
+         {
+            log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
+         });
+
+         hub.Subscribe<ConnectionStartedEvent>(this, e =>
+         {
+            log.LogInformation($"ConnectionStartedEvent: {e.Endpoint}");
+         });
+
+         hub.Subscribe<ConnectionStartingEvent>(this, e =>
+         {
+            log.LogInformation($"ConnectionStartedEvent: {e.Data.Id}");
+         });
+
+         hub.Subscribe<ConnectionUpdatedEvent>(this, e =>
+         {
+            log.LogInformation($"ConnectionUpdatedEvent: {e.Data.Id}");
+         });
+
+         hub.Subscribe<GatewayConnectedEvent>(this, e =>
+         {
+            log.LogInformation("Connected to Gateway");
+         });
+
+         hub.Subscribe<GatewayShutdownEvent>(this, e =>
+         {
+            log.LogInformation("Disconnected from Gateway");
+         });
+
+         hub.Subscribe<HubInfoEvent>(this, e =>
+         {
+         });
+
+         hub.Subscribe<MessageReceivedEvent>(this, e =>
+         {
+            log.LogInformation($"MessageReceivedEvent: {e.Data.Content}");
+         });
+
+         bool connectedToGateway = false;
+
+         while (!cancellationToken.IsCancellationRequested)
+         {
+            if (!connectedToGateway)
+            {
+               connectedToGateway = ConnectGateway();
+            }
+
+            //log.LogInformation("Hub Service is alive.");
+            //Task.WaitAll(new Task[] { tcpTask, udTask }, cancellationToken);
+            Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
+         }
+
+         return Task.CompletedTask;
       }
 
-      public void ConnectGateway()
+      public Task StopAsync(CancellationToken cancellationToken)
+      {
+         // Hm... we should disconnect our connection to both gateway and nodes, and inform then we are shutting down.
+         // this.connectionManager.Disconnect
+         // We will broadcast a shutdown when we're stopping.
+         // connectionManager.BroadcastTCP(new Notification(NotificationsTypes.ServerShutdown, null));
+
+         return Task.CompletedTask;
+      }
+
+      public bool ConnectGateway()
       {
          try
          {
@@ -123,11 +290,14 @@ namespace Blockcore.Platform.Networking
 
             hub.Publish(new GatewayConnectedEvent());
 
+            return true;
          }
          catch (Exception ex)
          {
-            log.LogError("Error when connecting", ex);
+            log.LogError($"Error when connecting to gateway {ServerEndpoint.ToString()}. Will retry again soon...", ex);
          }
+
+         return false;
       }
 
       public void DisconnectedGateway()
@@ -232,8 +402,8 @@ namespace Blockcore.Platform.Networking
                      if (receivedBytes != null)
                      {
                         // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
-                        Messages.BaseMessage message = messageSerializer.Deserialize(receivedBytes);
-                        MessageProcessing.Process(message, ProtocolType.Udp, endpoint);
+                        BaseMessage message = messageSerializer.Deserialize(receivedBytes);
+                        messageProcessing.Process(message, ProtocolType.Udp, endpoint);
                      }
                   }
                }
@@ -262,10 +432,10 @@ namespace Blockcore.Platform.Networking
                try
                {
                   // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
-                  Messages.BaseMessage message = messageSerializer.Deserialize(TCPClient.GetStream());
+                  BaseMessage message = messageSerializer.Deserialize(TCPClient.GetStream());
 
                   //messageProcessing.Process(message, ProtocolType.Tcp, null, TCPClient);
-                  MessageProcessing.Process(message, ProtocolType.Tcp);
+                  messageProcessing.Process(message, ProtocolType.Tcp);
                }
                catch (Exception ex)
                {
@@ -386,6 +556,11 @@ namespace Blockcore.Platform.Networking
          }
 
          return null;
+      }
+
+      public void Dispose()
+      {
+
       }
    }
 }

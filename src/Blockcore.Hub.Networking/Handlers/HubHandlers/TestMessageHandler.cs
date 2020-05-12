@@ -2,9 +2,9 @@ using Blockcore.Platform.Networking.Messages;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.HubHandlers
 {
-   public class TestMessageHandler : IMessageHandler, IHandle<TestMessage>
+   public class TestMessageHandler : IHubMessageHandler, IHandle<TestMessage>
    {
       public TestMessageHandler()
       {

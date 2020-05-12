@@ -1,39 +1,29 @@
-using Blockcore.Platform.Networking;
-using System;
-using System.Threading;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Blockcore.Hub
 {
-   class Program
+   public class Program
    {
-      static void Main(string[] args)
+      public static void Main(string[] args)
       {
-         if (args[0] == "--gateway")
-         {
-            Console.WriteLine("Blockcore Gateway Starting...");
-
-            var host = GatewayHost.Start(args);
-
-            Console.WriteLine("Blockcore Gateway Started.");
-            Console.WriteLine("Press ENTER to exit.");
-            Console.ReadLine();
-
-            host.Stop();
-            Thread.Sleep(3000);
-         }
-         else
-         {
-            Console.WriteLine("Blockcore Hub Starting...");
-
-            var host = HubHost.Start(args);
-
-            Console.WriteLine("Blockcore Hub Started.");
-            Console.WriteLine("Press ENTER to exit.");
-            Console.ReadLine();
-
-            host.Stop();
-            Thread.Sleep(3000);
-         }
+         CreateHostBuilder(args).Build().Run();
       }
+
+      public static IHostBuilder CreateHostBuilder(string[] args) =>
+          Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(config =>
+            {
+               config.AddBlockcore("Blockore Hub", args);
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+               webBuilder.ConfigureKestrel(serverOptions =>
+               {
+                  serverOptions.AddServerHeader = false;
+               });
+
+               webBuilder.UseStartup<Startup>();
+            });
    }
 }

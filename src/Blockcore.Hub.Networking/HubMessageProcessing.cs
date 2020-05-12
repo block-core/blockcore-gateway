@@ -8,21 +8,21 @@ using System.Net.Sockets;
 
 namespace Blockcore.Platform.Networking
 {
-   public class MessageProcessing : IMessageProcessingBase
+   public class HubMessageProcessing : IHubMessageProcessing, IGatewayMessageProcessing
    {
       private readonly IEnumerable<IMessageHandler> messageHandlers;
-      private readonly MessageMaps messageMaps;
+      private readonly MessageMaps maps;
 
-      public MessageProcessing(IEnumerable<IMessageHandler> messageHandlers, MessageMaps messageMaps)
+      public HubMessageProcessing(IEnumerable<IHubMessageHandler> messageHandlers)
       {
          this.messageHandlers = messageHandlers;
-         this.messageMaps = messageMaps;
+         maps = new MessageMaps();
       }
 
       /// <summary>
       /// Important to call before any processing, to ensure all messages and handlers are registered.
       /// </summary>
-      public void Build()
+      public MessageMaps Build()
       {
          foreach (IMessageHandler handler in messageHandlers)
          {
@@ -36,19 +36,21 @@ namespace Blockcore.Platform.Networking
             System.Reflection.PropertyInfo prop = type.GetProperty("Command");
             ushort cmd = (ushort)prop.GetValue(instance);
 
-            if (!messageMaps.Contains(cmd))
+            if (!maps.Contains(cmd))
             {
                var map = new Map();
                map.Command = cmd;
                map.MessageType = type;
                map.Handlers.Add(handler);
-               messageMaps.AddCommand(cmd, map);
+               maps.AddCommand(cmd, map);
             }
             else
             {
-               messageMaps.AddHandler(cmd, handler);
+               maps.AddHandler(cmd, handler);
             }
          }
+
+         return maps;
       }
 
       /// <summary>
@@ -65,12 +67,12 @@ namespace Blockcore.Platform.Networking
             throw new ArgumentNullException("message");
          }
 
-         if (!messageMaps.Contains(message.Command))
+         if (!maps.Contains(message.Command))
          {
             throw new MessageProcessingException($"No handlers for message {message.Command}");
          }
 
-         Map map = messageMaps.GetMap(message.Command);
+         Map map = maps.GetMap(message.Command);
 
          foreach (dynamic handler in map.Handlers)
          {

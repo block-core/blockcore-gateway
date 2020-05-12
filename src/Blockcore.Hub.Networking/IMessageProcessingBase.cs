@@ -4,9 +4,16 @@ using System.Net.Sockets;
 
 namespace Blockcore.Platform.Networking
 {
-   public interface IMessageProcessingBase
+   public interface IHubMessageProcessing
    {
-      public void Build();
+      public MessageMaps Build();
+
+      public void Process(BaseMessage message, ProtocolType protocol, IPEndPoint endpoint = null, TcpClient client = null);
+   }
+
+   public interface IGatewayMessageProcessing
+   {
+      public MessageMaps Build();
 
       public void Process(BaseMessage message, ProtocolType protocol, IPEndPoint endpoint = null, TcpClient client = null);
    }

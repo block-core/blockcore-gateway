@@ -1,11 +1,13 @@
+using Blockcore.Hub.Networking.Managers;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking.Messages;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.GatewayHandlers
 {
-   public class KeepAliveMessageGatewayHandler : IMessageGatewayHandler, IHandle<KeepAliveMessage>
+   public class KeepAliveMessageGatewayHandler : IGatewayMessageHandler, IHandle<KeepAliveMessage>
    {
       private readonly ILogger<InfoMessageGatewayHandler> log;
       private readonly GatewayManager manager;

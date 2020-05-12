@@ -1,0 +1,38 @@
+{
+   "profiles": {
+      "BTC (HUB/GATEWAY)": {
+         "commandName": "Project",
+         "launchBrowser": true,
+         "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+         },
+         "applicationUrl": "http://localhost:9912"
+      },
+      "BTC (GATEWAY)": {
+         "commandName": "Project",
+         "launchBrowser": true,
+         "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+         },
+         "applicationUrl": "http://localhost:9912"
+      },
+      "BTC (HUB)": {
+         "commandName": "Project",
+         "launchBrowser": true,
+         "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+         },
+         "applicationUrl": "http://localhost:9912"
+      },
+      "CITY (HUB/GATEWAY)": {
+         "commandName": "Project",
+         "commandLineArgs": "--chain=CITY --Gateway:Enabled=false",
+         // "commandLineArgs": "--chain=CITY --Gateway:Enabled=true --Hub:Enabled=true",
+         "launchBrowser": true,
+         "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+         },
+         "applicationUrl": "http://localhost:9912"
+      }
+   }
+}

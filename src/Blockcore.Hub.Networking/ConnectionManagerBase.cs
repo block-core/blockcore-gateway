@@ -4,14 +4,23 @@ using System.Linq;
 
 namespace Blockcore.Platform.Networking
 {
-   public class ConnectionManager
+   public class HubConnectionManager : ConnectionManager
+   { }
+
+   public class GatewayConnectionManager : ConnectionManager
+   { }
+
+   public abstract class ConnectionManager
    {
       // TODO: Refactor dependent types to not use this collection directly.
       public List<HubInfo> Connections { get; private set; } = new List<HubInfo>();
 
       public void RemoveConnection(HubInfo connection)
       {
-         Connections.Remove(connection);
+         lock (Connections)
+         {
+            Connections.Remove(connection);
+         }
       }
 
       public HubInfo GetConnection(long id)
@@ -21,12 +30,18 @@ namespace Blockcore.Platform.Networking
 
       public void AddConnection(HubInfo hubInfo)
       {
-         Connections.Add(hubInfo);
+         lock (Connections)
+         {
+            Connections.Add(hubInfo);
+         }
       }
 
       public void ClearConnections()
       {
-         Connections.Clear();
+         lock (Connections)
+         {
+            Connections.Clear();
+         }
       }
    }
 }

@@ -1,5 +1,6 @@
 using Blockcore.Platform.Networking;
 using Blockcore.Platform.Networking.Handlers;
+using Blockcore.Platform.Networking.Handlers.HubHandlers;
 using Blockcore.Platform.Networking.Messages;
 using System;
 using System.IO;
@@ -23,7 +24,7 @@ namespace Blockcore.Platform.Tests
          maps.AddCommand(MessageTypes.TEST, new Map() { Command = MessageTypes.TEST, MessageType = typeof(TestMessage) });
          maps.AddHandler(MessageTypes.TEST, new TestMessageHandler());
 
-         var serializer = new MessageSerializer(maps);
+         var serializer = new MessageSerializer();
 
          byte[] serialized = serializer.Serialize(msg);
          BaseMessage deserialized = serializer.Deserialize<TestMessage>(serialized);

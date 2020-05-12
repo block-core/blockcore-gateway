@@ -12,14 +12,14 @@ namespace Blockcore.Platform.Networking
       private readonly int HeaderSize;
       private const ushort Version = 1;
       private readonly int VersionByteSize;
-      private readonly MessageMaps maps;
 
-      public MessageSerializer(MessageMaps maps)
+      public MessageSerializer()
       {
-         this.maps = maps;
          HeaderSize = Unsafe.SizeOf<HeaderInfo>();
          VersionByteSize = Unsafe.SizeOf<ushort>();
       }
+
+      public MessageMaps Maps { get; set; }
 
       public byte[] Serialize(BaseMessage message)
       {
@@ -90,7 +90,7 @@ namespace Blockcore.Platform.Networking
          reader.Read(headerByteSpan);
 
          // Get the registered message type, these are registered using dependency injection.
-         Type messageType = maps.GetMessageType(header.Command);
+         Type messageType = Maps.GetMessageType(header.Command);
 
          // Read the full message, based on the size provided in the header.
          byte[] messageBytes = reader.ReadBytes(header.Size);
@@ -115,7 +115,7 @@ namespace Blockcore.Platform.Networking
          inputSpan.Slice(VersionByteSize, HeaderSize).CopyTo(headerByteSpan); // Read header
 
          // Get the registered message type, these are registered using dependency injection.
-         Type messageType = maps.GetMessageType(header.Command);
+         Type messageType = Maps.GetMessageType(header.Command);
 
          // Don't slice and convert to byte array before it's necessary
          byte[] messageBytes = inputSpan.Slice(VersionByteSize + HeaderSize, header.Size).ToArray();

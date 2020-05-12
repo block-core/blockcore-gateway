@@ -1,19 +1,23 @@
+using Blockcore.Hub.Networking.Managers;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking.Events;
 using Blockcore.Platform.Networking.Messages;
 using PubSub;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Blockcore.Platform.Networking.Handlers
+namespace Blockcore.Platform.Networking.Handlers.HubHandlers
 {
-   public class NotificationMessageHandler : IMessageHandler, IHandle<NotificationMessage>
+   public class NotificationMessageHandler : IHubMessageHandler, IHandle<NotificationMessage>
    {
-      private readonly Hub hub = Hub.Default;
+      private readonly PubSub.Hub hub = PubSub.Hub.Default;
       private readonly HubManager manager;
+      private readonly HubConnectionManager connections;
 
-      public NotificationMessageHandler(HubManager manager)
+      public NotificationMessageHandler(HubManager manager, HubConnectionManager connections)
       {
          this.manager = manager;
+         this.connections = connections;
       }
 
       public void Process(BaseMessage message, ProtocolType Protocol, IPEndPoint EP = null, TcpClient Client = null)
@@ -22,11 +26,11 @@ namespace Blockcore.Platform.Networking.Handlers
 
          if (item.Type == NotificationsTypes.Disconnected)
          {
-            Entities.HubInfo hubInfo = manager.Connections.GetConnection(long.Parse(item.Tag.ToString()));
+            Entities.HubInfo hubInfo = connections.GetConnection(long.Parse(item.Tag.ToString()));
 
             if (hubInfo != null)
             {
-               manager.Connections.RemoveConnection(hubInfo);
+               connections.RemoveConnection(hubInfo);
                hub.Publish(new ConnectionRemovedEvent() { Data = hubInfo });
             }
          }
