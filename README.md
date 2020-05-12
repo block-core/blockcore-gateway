@@ -1,4 +1,21 @@
-# IMPORTANT: THIS IS A PROTOTYPE / CONCEPT, NOT TO BE USED.
+# PROTOTYPE / CONCEPT - UNFINISHED WORK
+
+<p align="center">
+  <p align="center">
+    <img src="https://avatars3.githubusercontent.com/u/53176002?s=200&v=4" height="100" alt="Blockcore" />
+  </p>
+  <h3 align="center">
+    About Blockcore Hub
+  </h3>
+  <p align="center">
+    Distributed hubs that provide supporting services to your Blockcore based blockchain.
+  </p>
+  <p align="center">
+      <a href="https://github.com/block-core/blockcore-hub/actions"><img src="https://github.com/block-core/blockcore-hub/workflows/Pull%20Request/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore-hub/actions"><img src="https://github.com/block-core/blockcore-hub/workflows/Build%20and%20Release%20Binaries/badge.svg" /></a>
+      <a href="https://github.com/block-core/blockcore-hub/actions"><img src="https://github.com/block-core/blockcore-hub/workflows/Build%20and%20Release%20Docker%20Image/badge.svg" /></a>
+  </p>
+</p>
 
 # Blockcore Hub
 
