@@ -1,0 +1,1 @@
+START src\Blockcore.Hub\bin\Debug\netcoreapp3.1\Blockcore.Hub.exe

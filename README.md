@@ -112,3 +112,12 @@ The platform should be able to keep inter-chain links connected to the identitie
 This can be used to verify ownership of cars on a "car-blockchain" (https://vinchain.io/, https://www.carvertical.com/en/), or insurance policy on an "insurance-blockchain". Could also be used to connect sidechains on a Blockcore-based blockchain, with identity that exists on the platform.
 
 This type of information can be deployed on the Blockcore Platform Portal, where a user can see all their connected assets across multiple blockchains.
+
+## Attributions
+
+Thanks to [Benjamin Watkins](https://github.com/7wingfly/P2Pchat/) for providing a workable proof-of-concept for P2P communication in C#.
+
+## License
+
+Blockore Platform by Blockore, licensed as MIT
+Parts by Benjamin Watkins, licensed as MIT

@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6CCD1A23-03F2-4991-8964-561CC5B71C7D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Platform.Tests", "src\Blockcore.Platform.Tests\Blockcore.Platform.Tests.csproj", "{0142C7A3-2D46-4AB8-AF34-7534F45140EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub", "src\Blockcore.Hub\Blockcore.Hub.csproj", "{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Gateway", "src\Blockcore.Gateway\Blockcore.Gateway.csproj", "{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Platform", "src\Blockcore.Platform\Blockcore.Platform.csproj", "{DFD1B229-2E23-4865-ABE7-095543254EF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0142C7A3-2D46-4AB8-AF34-7534F45140EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0142C7A3-2D46-4AB8-AF34-7534F45140EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0142C7A3-2D46-4AB8-AF34-7534F45140EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0142C7A3-2D46-4AB8-AF34-7534F45140EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFD1B229-2E23-4865-ABE7-095543254EF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFD1B229-2E23-4865-ABE7-095543254EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFD1B229-2E23-4865-ABE7-095543254EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFD1B229-2E23-4865-ABE7-095543254EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {76819A21-807B-4FC4-9AE3-F59C1A5CC588}
+	EndGlobalSection
+EndGlobal
