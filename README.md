@@ -1,12 +1,12 @@
-# Blockcore Platform
+# Blockcore Hub
 
-> The Blockcore Platform is a distributed system that integrates with Blockcore Blockchain technologies.
+> The Blockcore Hub is a distributed system that integrates with Blockcore Blockchain technologies.
 
-The Blockcore Platform can be used to build distributed apps and systems, that store data and metadata off-chain, but utilize the blockchain for data integrity, data validation and signing.
+The Blockcore Hub can be used to build distributed apps and systems, that store data and metadata off-chain, but utilize the blockchain for data integrity, data validation and signing.
 
 ## Functional Background
 
-The functional requirement for developing the Blockcore Platform, is to have a distributed network for exchanging data securely, but that keeps data off the main blockchain.
+The functional requirement for developing the Blockcore Hub, is to have a distributed network for exchanging data securely, but that keeps data off the main blockchain.
 
 Example on usage is a payment scenario, where a user scans a payment request by another individual, or a merchant, and the payment app can retrieve data (metadata, including company logo or profile photo) about the merchant/individual from the Blockcore Platform. This data can be used to add trust and identification on the validitity of a payment request.
 
@@ -16,7 +16,7 @@ Other examples is identities and metadata attached to identities. Metadata must 
 
 ## Blockcore Identity
 
-The Blockcore Platform relies heavily on the Blockcore Identity Framework.
+The Blockcore Hub relies heavily on the Blockcore Identity Framework.
 
 [BIP 32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 
@@ -43,7 +43,7 @@ DID: https://w3c-ccg.github.io/did-spec/
 
 ## Blockcore Networking
 
-The Blockcore Platform relies on the Blockcore Networking Framework to perform true peer-to-peer networking without relying on firewall port opening, and has high-performance and encrypted data-transfer between participants in the network. TODO: Research into WebRTC and the possibility of supporting WebRTC in the full node.
+The Blockcore Hub relies on the Blockcore Networking Framework to perform true peer-to-peer networking without relying on firewall port opening, and has high-performance and encrypted data-transfer between participants in the network. TODO: Research into WebRTC and the possibility of supporting WebRTC in the full node.
 
 ## Payment Requests
 
@@ -69,49 +69,49 @@ This address can be encoded into an QR code for quick scanning, and is based on 
 
 - Should the identity be given in clear-text, or should it be unique per payment and require decryption (address+identity=key)?
 - The identity-key is an encryption key that opens up private meta-data of the receiver. This is optional.
-- When a user performs a payment, should they persist the identity and identity-key on their private vault on the Blockcore Platform? Unless they do, they either have to store the metadata at the point of payment performed, or they will be unable to restore (during a wallet restore) a full transaction history in the future.
-- Storing the full history makes it hard for others to withdraw metadata, so really only the identity (and perhaps identity-key) should be stored in the platform. This means in the future, a merchant/individual can withdraw all metadata and when a wallet is restored, the history information will disappear (not be available).
+- When a user performs a payment, should they persist the identity and identity-key on their private vault on the Blockcore Hub? Unless they do, they either have to store the metadata at the point of payment performed, or they will be unable to restore (during a wallet restore) a full transaction history in the future.
+- Storing the full history makes it hard for others to withdraw metadata, so really only the identity (and perhaps identity-key) should be stored in the hub. This means in the future, a merchant/individual can withdraw all metadata and when a wallet is restored, the history information will disappear (not be available).
 - Receiving the encoded payment request URI should additionally support NFC (Near-Field-Communication). NFC support enables PoS (Point-of-Sale) setup where no screen is needed.
-- Data retrieved from the platform, can be integrity-validated to ensure it is untamprered.
+- Data retrieved from the hub, can be integrity-validated to ensure it is untamprered.
 
 ## Payment for services
 
 When a user utilized the services provided by the participants in the distributed nodes network, they will be performing payment to all members of the network. These payments are automatic, and users will need to have wallets with balance to perform (automatic) payment for services utilized.
 
-- Users running platform nodes should receive payment for utilizing storage.
-- What distribution model makes sense for the platform nodes?
+- Users running hub nodes should receive payment for utilizing storage.
+- What distribution model makes sense for the hub nodes?
 
 ## Communities
 
-The platform should enable encrypted and fully anonymous secure communities. Enabling anyone, friends, neighbourhoods, merchants or anyone to communicate secure and anonymous. The same identity used for payments, can also be used for communities.
+The hub should enable encrypted and fully anonymous secure communities. Enabling anyone, friends, neighbourhoods, merchants or anyone to communicate secure and anonymous. The same identity used for payments, can also be used for communities.
 
-A community owner should be able to decide if to utilize the platform nodes for persistent storage of encrypted community content, or if the platform nodes should only be used for message relay.
+A community owner should be able to decide if to utilize the hub nodes for persistent storage of encrypted community content, or if the hub nodes should only be used for message relay.
 
 The community will largely be built as a client-side implementation, with persistent storage in the web browser.
 
 ## Sidechain Metadata
 
-Platform should have the ability to store and shared metadata related to sidechains that runs on the blockchain. This is useful to have additional information available, that can securely verified and updated by owners of sidechains.
+Hub should have the ability to store and shared metadata related to sidechains that runs on the blockchain. This is useful to have additional information available, that can securely verified and updated by owners of sidechains.
 
 ## Contracts
 
-Platform should be able to store contracts, both in form of analog documents and semi-smart contracts.
+Hub should be able to store contracts, both in form of analog documents and semi-smart contracts.
 
 ## Subscriptions
 
-Platform should support subscriptions, with the ability for auto-withdrawal from multi-sig wallets that are manually or automatically populated from regular wallets.
+Hub should support subscriptions, with the ability for auto-withdrawal from multi-sig wallets that are manually or automatically populated from regular wallets.
 
 ## Point-of-Sale
 
-Platform must support the ability to store Point-of-Sale databases for merchants. Merchants must pay for this service, but it will enable merchants to have a fully distributed network of PoS-devices that retrieve the latest database from the platform nodes.
+Hub must support the ability to store Point-of-Sale databases for merchants. Merchants must pay for this service, but it will enable merchants to have a fully distributed network of PoS-devices that retrieve the latest database from the hub nodes.
 
 ## Inter-Chain Links
 
-The platform should be able to keep inter-chain links connected to the identities on the platform. This means connecting the ownership or public key on one blockchain with the identities that exists on the platform.
+The hub should be able to keep inter-chain links connected to the identities on the hub. This means connecting the ownership or public key on one blockchain with the identities that exists on the hub.
 
-This can be used to verify ownership of cars on a "car-blockchain" (https://vinchain.io/, https://www.carvertical.com/en/), or insurance policy on an "insurance-blockchain". Could also be used to connect sidechains on a Blockcore-based blockchain, with identity that exists on the platform.
+This can be used to verify ownership of cars on a "car-blockchain" (https://vinchain.io/, https://www.carvertical.com/en/), or insurance policy on an "insurance-blockchain". Could also be used to connect sidechains on a Blockcore-based blockchain, with identity that exists on the hubs.
 
-This type of information can be deployed on the Blockcore Platform Portal, where a user can see all their connected assets across multiple blockchains.
+This type of information can be deployed on the Blockcore Hub Portal, where a user can see all their connected assets across multiple blockchains.
 
 ## Attributions
 
@@ -119,5 +119,5 @@ Thanks to [Benjamin Watkins](https://github.com/7wingfly/P2Pchat/) for providing
 
 ## License
 
-Blockore Platform by Blockore, licensed as MIT
+Blockore Hub by Blockore, licensed as MIT
 Parts by Benjamin Watkins, licensed as MIT

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blockcore.Platform\Blockcore.Platform.csproj" />
+    <ProjectReference Include="..\Blockcore.Hub.Networking\Blockcore.Hub.Networking.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Platform.Tests", "src\Blockcore.Platform.Tests\Blockcore.Platform.Tests.csproj", "{0142C7A3-2D46-4AB8-AF34-7534F45140EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Networking.Tests", "src\Blockcore.Hub.Networking.Tests\Blockcore.Hub.Networking.Tests.csproj", "{0142C7A3-2D46-4AB8-AF34-7534F45140EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub", "src\Blockcore.Hub\Blockcore.Hub.csproj", "{92E7EAE2-40F6-441F-8AA2-A2A975A05FDB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Gateway", "src\Blockcore.Gateway\Blockcore.Gateway.csproj", "{85E69ED8-C984-4633-A1F0-FF4262E2F6B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Platform", "src\Blockcore.Platform\Blockcore.Platform.csproj", "{DFD1B229-2E23-4865-ABE7-095543254EF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Networking", "src\Blockcore.Hub.Networking\Blockcore.Hub.Networking.csproj", "{DFD1B229-2E23-4865-ABE7-095543254EF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
