@@ -1,3 +1,5 @@
+# IMPORTANT: THIS IS A PROTOTYPE / CONCEPT, NOT TO BE USED.
+
 # Blockcore Hub
 
 > The Blockcore Hub is a distributed system that integrates with Blockcore Blockchain technologies.

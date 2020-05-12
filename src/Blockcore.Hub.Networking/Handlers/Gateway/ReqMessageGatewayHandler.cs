@@ -1,30 +1,30 @@
-﻿using Blockcore.Platform.Networking.Entities;
+using Blockcore.Platform.Networking.Entities;
 using Blockcore.Platform.Networking.Messages;
 using System.Net;
 using System.Net.Sockets;
 
 namespace Blockcore.Platform.Networking.Handlers
 {
-    public class ReqMessageGatewayHandler : IMessageGatewayHandler, IHandle<ReqMessage>
-    {
-        
-        private readonly GatewayManager manager;
+   public class ReqMessageGatewayHandler : IMessageGatewayHandler, IHandle<ReqMessage>
+   {
 
-        public ReqMessageGatewayHandler(GatewayManager manager)
-        {
-            this.manager = manager;
-        }
+      private readonly GatewayManager manager;
 
-        public void Process(BaseMessage message, ProtocolType Protocol, IPEndPoint EP = null, TcpClient Client = null)
-        {
-            ReqMessage req = (ReqMessage)message;
+      public ReqMessageGatewayHandler(GatewayManager manager)
+      {
+         this.manager = manager;
+      }
 
-            HubInfo hubInfo = manager.Connections.GetConnection(req.RecipientId);
+      public void Process(BaseMessage message, ProtocolType Protocol, IPEndPoint EP = null, TcpClient Client = null)
+      {
+         ReqMessage req = (ReqMessage)message;
 
-            if (hubInfo != null)
-            {
-                manager.SendTCP(new Req(req), hubInfo.Client);
-            }
-        }
-    }
+         HubInfo hubInfo = manager.Connections.GetConnection(req.RecipientId);
+
+         if (hubInfo != null)
+         {
+            manager.SendTCP(new Req(req), hubInfo.Client);
+         }
+      }
+   }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,15 +9,15 @@ namespace Blockcore.Platform
     {
         public static List<Type> GetAllTypesImplementingOpenGenericType(this Assembly assembly, Type openGenericType)
         {
-            var list = from x in assembly.GetTypes()
-                   from z in x.GetInterfaces()
-                   let y = x.BaseType
-                   where
-                   (y != null && y.IsGenericType &&
-                   openGenericType.IsAssignableFrom(y.GetGenericTypeDefinition())) ||
-                   (z.IsGenericType &&
-                   openGenericType.IsAssignableFrom(z.GetGenericTypeDefinition()))
-                   select x;
+         IEnumerable<Type> list = from x in assembly.GetTypes()
+                       from z in x.GetInterfaces()
+                       let y = x.BaseType
+                       where
+                       (y != null && y.IsGenericType &&
+                       openGenericType.IsAssignableFrom(y.GetGenericTypeDefinition())) ||
+                       (z.IsGenericType &&
+                       openGenericType.IsAssignableFrom(z.GetGenericTypeDefinition()))
+                       select x;
 
             return list.ToList();
         }
@@ -30,13 +30,15 @@ namespace Blockcore.Platform
         public static List<Type> GetGenericTypes(this Assembly assembly, Type compareType)
         {
             List<Type> ret = new List<Type>();
-            foreach (var type in assembly.DefinedTypes)
+
+            foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.GetInterface(compareType.Name) != null)
                 {
                     ret.Add(type);
                 }
             }
+
             return ret;
         }
 
@@ -68,6 +70,7 @@ namespace Blockcore.Platform
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -86,7 +89,8 @@ namespace Blockcore.Platform
         public static List<Type> GetTypesImplementing(this Assembly assembly, Type compareType)
         {
             List<Type> ret = new List<Type>();
-            foreach (var type in assembly.DefinedTypes)
+
+            foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.IsInterface || type.IsGenericType)
                 {
@@ -98,6 +102,7 @@ namespace Blockcore.Platform
                     ret.Add(type);
                 }
             }
+
             return ret;
         }
 
@@ -109,13 +114,15 @@ namespace Blockcore.Platform
         public static List<Type> GetTypesAssignableFrom(this Assembly assembly, Type compareType)
         {
             List<Type> ret = new List<Type>();
-            foreach (var type in assembly.DefinedTypes)
+
+            foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (compareType.IsAssignableFrom(type) && compareType != type)
                 {
                     ret.Add(type);
                 }
             }
+
             return ret;
         }
 
@@ -127,13 +134,15 @@ namespace Blockcore.Platform
         public static List<Type> GetTypesFromAttribute(this Assembly assembly, Type compareType)
         {
             List<Type> ret = new List<Type>();
-            foreach (var type in assembly.DefinedTypes)
+
+            foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.GetCustomAttribute(compareType) != null)
                 {
                     ret.Add(type);
                 }
             }
+
             return ret;
         }
     }

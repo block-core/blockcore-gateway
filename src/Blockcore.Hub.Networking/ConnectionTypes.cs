@@ -1,9 +1,9 @@
-﻿namespace Blockcore.Platform.Networking
+namespace Blockcore.Platform.Networking
 {
-    public enum ConnectionTypes
-    {
-        Unknown,
-        LAN,
-        WAN
-    }
+   public enum ConnectionTypes
+   {
+      Unknown,
+      LAN,
+      WAN
+   }
 }

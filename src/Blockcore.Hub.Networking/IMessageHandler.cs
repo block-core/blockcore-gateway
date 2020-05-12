@@ -1,6 +1,6 @@
-﻿namespace Blockcore.Platform.Networking
+namespace Blockcore.Platform.Networking
 {
-    public interface IMessageHandler
-    {
-    }
+   public interface IMessageHandler
+   {
+   }
 }

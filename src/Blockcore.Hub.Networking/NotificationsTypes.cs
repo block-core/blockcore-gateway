@@ -1,8 +1,8 @@
-﻿namespace Blockcore.Platform.Networking
+namespace Blockcore.Platform.Networking
 {
-    public enum NotificationsTypes
-    {
-        ServerShutdown,
-        Disconnected
-    }
+   public enum NotificationsTypes
+   {
+      ServerShutdown,
+      Disconnected
+   }
 }

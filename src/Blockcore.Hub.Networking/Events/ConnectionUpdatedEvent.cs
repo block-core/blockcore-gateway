@@ -1,4 +1,4 @@
-﻿using Blockcore.Platform.Networking.Entities;
+using Blockcore.Platform.Networking.Entities;
 
 namespace Blockcore.Platform.Networking.Events
 {
