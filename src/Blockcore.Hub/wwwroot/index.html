@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Basic UI for Node Web Socket</title>
+    <script src="js/signalr.js"></script>
+
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: rgb(26, 26, 26);
+            color: white;
+            padding: 1em;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 18px;
+        }
+
+        .chat {
+            min-height: 400px;
+            border: 1px solid gray;
+            padding: 1em;
+            overflow-y: scroll;
+            margin-top: 1em;
+        }
+
+        input {
+            min-width: 40%;
+            font-size: 1.2em;
+            padding: 0.4em;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 0.4em;
+        }
+
+        #publickey {
+            margin-bottom: 0.1em;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <input type="text" name="publickey" id="publickey" placeholder="Public Key">
+    <br>
+    <input type="text" name="message" id="message" placeholder="Message">
+
+    <button onclick="broadcast()">Broadcast</button>
+
+    <div class="chat">
+
+    </div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:9912/ws")
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        var hub = connection.start();
+
+        document.getElementById('message').addEventListener('keypress', function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                broadcast();
+            }
+        });
+
+        connection.on("Command", (result) => {
+            console.log(result);
+        });
+
+        function broadcast() {
+            var publicKey = document.getElementById('publickey').value;
+            var message = document.getElementById('message').value;
+
+            document.getElementById('message').value = '';
+
+            console.log('Broadcast: ' + publicKey + ': ' + message);
+            connection.invoke("Broadcast", publicKey, message).catch(err => console.error(err));
+        }
+    </script>
+
+</body>
+
+</html>

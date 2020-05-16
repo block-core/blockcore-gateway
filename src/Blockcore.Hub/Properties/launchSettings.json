@@ -24,10 +24,9 @@
          },
          "applicationUrl": "http://localhost:9912"
       },
-      "CITY (HUB/GATEWAY)": {
+      "CITY (HUB)": {
          "commandName": "Project",
-         "commandLineArgs": "--chain=CITY --Gateway:Enabled=false",
-         // "commandLineArgs": "--chain=CITY --Gateway:Enabled=true --Hub:Enabled=true",
+         "commandLineArgs": "--chain=CITY",
          "launchBrowser": true,
          "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"

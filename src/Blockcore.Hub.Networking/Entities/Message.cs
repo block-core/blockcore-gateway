@@ -9,6 +9,11 @@ namespace Blockcore.Platform.Networking.Entities
       public string Content { get; set; }
       public long RecipientId { get; set; }
 
+      public Message()
+      {
+
+      }
+
       public Message(string from, string to, string content)
       {
          From = from;

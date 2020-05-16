@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,16 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blockcore.Core" Version="1.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Blockcore.Hub.Networking\Blockcore.Hub.Networking.csproj" />
   </ItemGroup>
-
-   <ItemGroup>
-      <EmbeddedResource Include="wwwroot\**\*" />
-   </ItemGroup>
 
 </Project>

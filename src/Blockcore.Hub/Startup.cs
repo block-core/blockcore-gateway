@@ -1,14 +1,18 @@
+using System;
 using System.Reflection;
+using Blockcore.Hub.Networking.Hubs;
 using Blockcore.Hub.Networking.Managers;
 using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform;
 using Blockcore.Platform.Networking;
 using Blockcore.Settings;
+using Blockcore.Utilities.JsonConverters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace Blockcore.Hub
 {
@@ -30,22 +34,15 @@ namespace Blockcore.Hub
          services.Configure<HubSettings>(Configuration.GetSection("Hub"));
          services.Configure<GatewaySettings>(Configuration.GetSection("Gateway"));
 
-         services.AddSingleton<IHubMessageProcessing, HubMessageProcessing>();
-         services.AddSingleton<IGatewayMessageProcessing, GatewayMessageProcessing>();
-
          services.AddTransient<MessageSerializer>();
-
-         services.AddSingleton<HubConnectionManager>();
-         services.AddSingleton<GatewayConnectionManager>();
-
          Assembly assembly = typeof(MessageSerializer).Assembly;
 
-         // TODO: This should likely be updated in the future to allow third-party plugin assemblies to be loaded as well.
-         // Register all gateway handlers in executing assembly.
-         assembly.GetTypesImplementing<IGatewayMessageHandler>().ForEach((t) =>
-         {
-            services.AddSingleton(typeof(IGatewayMessageHandler), t);
-         });
+         services.AddSingleton<IHubMessageProcessing, HubMessageProcessing>();
+         services.AddSingleton<HubConnectionManager>();
+         services.AddSingleton<HubManager>();
+         services.AddSingleton<WebSocketHub>();
+         services.AddSingleton<CommandDispatcher>();
+         services.AddHostedService<HubService>();
 
          // Register all hub handlers.
          assembly.GetTypesImplementing<IHubMessageHandler>().ForEach((t) =>
@@ -53,13 +50,36 @@ namespace Blockcore.Hub
             services.AddSingleton(typeof(IHubMessageHandler), t);
          });
 
-         services.AddSingleton<GatewayManager>();
-         services.AddSingleton<HubManager>();
-
-         services.AddHostedService<GatewayService>();
-         services.AddHostedService<HubService>();
-
          services.AddControllers();
+
+         services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
+         {
+            var settings = new JsonSerializerSettings();
+            Serializer.RegisterFrontConverters(settings);
+            options.PayloadSerializerSettings = settings;
+         });
+
+         // Add service and create Policy to allow Cross-Origin Requests
+         services.AddCors
+         (
+             options =>
+             {
+                options.AddPolicy
+                   (
+                       "CorsPolicy",
+
+                       builder =>
+                       {
+                          string[] allowedDomains = new[] { "http://localhost", "http://localhost:9912", "http://localhost:4200", "http://localhost:8080" };
+
+                          builder
+                          .WithOrigins(allowedDomains)
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
+                       }
+                   );
+             });
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,14 +90,50 @@ namespace Blockcore.Hub
             app.UseDeveloperExceptionPage();
          }
 
+         app.UseDefaultFiles();
+
+         app.UseStaticFiles();
+
          app.UseRouting();
 
-         app.UseAuthorization();
+         app.UseCors("CorsPolicy");
 
          app.UseEndpoints(endpoints =>
          {
+            endpoints.MapHub<WebSocketHub>("/ws");
             endpoints.MapControllers();
          });
       }
    }
+
+   /// <summary>
+   /// This class will allow to read the wwwroot folder
+   /// which has been set ad an embeded folder in to the dll (in the project file)
+   /// </summary>
+   //public class EditorRCLConfigureOptions : IPostConfigureOptions<StaticFileOptions>
+   //{
+   //   private readonly IWebHostEnvironment environment;
+
+   //   public EditorRCLConfigureOptions(IWebHostEnvironment environment)
+   //   {
+   //      this.environment = environment;
+   //   }
+
+   //   public void PostConfigure(string name, StaticFileOptions options)
+   //   {
+   //      // Basic initialization in case the options weren't initialized by any other component
+   //      options.ContentTypeProvider = options.ContentTypeProvider ?? new FileExtensionContentTypeProvider();
+
+   //      if (options.FileProvider == null && environment.WebRootFileProvider == null)
+   //      {
+   //         throw new InvalidOperationException("Missing FileProvider.");
+   //      }
+
+   //      options.FileProvider = options.FileProvider ?? environment.WebRootFileProvider;
+
+   //      // Add our provider
+   //      var filesProvider = new ManifestEmbeddedFileProvider(GetType().Assembly, "wwwroot");
+   //      options.FileProvider = new CompositeFileProvider(options.FileProvider, filesProvider);
+   //   }
+   //}
 }

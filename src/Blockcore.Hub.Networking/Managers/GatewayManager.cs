@@ -71,13 +71,6 @@ namespace Blockcore.Hub.Networking.Managers
 
       public Task StartAsync(CancellationToken cancellationToken)
       {
-         if (!gatewaySettings.Enabled)
-         {
-            log.LogInformation($"Gateway Service is not enabled.");
-
-            return Task.CompletedTask;
-         }
-
          log.LogInformation($"Start Gateway Service for {chainSettings.Symbol}.");
 
          tcpEndpoint = new IPEndPoint(IPAddress.Any, gatewaySettings.Port);
@@ -188,6 +181,7 @@ namespace Blockcore.Hub.Networking.Managers
             }
 
          }, cancellationToken);
+
          return Task.CompletedTask;
       }
 

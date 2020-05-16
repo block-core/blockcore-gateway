@@ -24,7 +24,15 @@ namespace Blockcore.Platform.Networking.Handlers.GatewayHandlers
       public void Process(BaseMessage message, ProtocolType protocol, IPEndPoint endpoint = null, TcpClient client = null)
       {
          MessageMessage msg = (MessageMessage)message;
-         log.LogInformation("Message from {0}:{1}: {2}", endpoint.Address, endpoint.Port, msg.Content);
+
+         if (endpoint != null)
+         {
+            log.LogInformation("Message from {0} ({1}): {2}", msg.From, endpoint.ToString(), msg.Content);
+         }
+         else if (client != null)
+         {
+            log.LogInformation("Message from {0} ({1}): {2}", msg.From, client.Client.RemoteEndPoint.ToString(), msg.Content);
+         }
       }
    }
 }

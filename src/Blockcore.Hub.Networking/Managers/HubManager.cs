@@ -135,16 +135,18 @@ namespace Blockcore.Hub.Networking.Managers
 
       public Task StartAsync(CancellationToken cancellationToken)
       {
-         if (!hubSettings.Enabled)
-         {
-            log.LogInformation($"Hub Service is not enabled.");
-
-            return Task.CompletedTask;
-         }
-
          log.LogInformation($"Start Hub Service for {chainSettings.Symbol}.");
 
-         ServerEndpoint = new IPEndPoint(IPAddress.Parse(hubSettings.Server), hubSettings.Port);
+         IPAddress[] IPAddresses = Dns.GetHostAddresses(hubSettings.Server);
+
+         if (IPAddresses.Length == 0)
+         {
+            throw new ApplicationException("Did not find any IP address for the hub server.");
+         }
+
+         //ServerEndpoint = new IPEndPoint(IPAddress.Parse(hubSettings.Server), hubSettings.Port);
+         // TODO: #4
+         ServerEndpoint = new IPEndPoint(IPAddresses[0], hubSettings.Port);
          LocalHubInfo = new HubInfo();
          AckResponces = new List<Ack>();
 
@@ -227,19 +229,112 @@ namespace Blockcore.Hub.Networking.Managers
             log.LogInformation($"MessageReceivedEvent: {e.Data.Content}");
          });
 
-         bool connectedToGateway = false;
 
-         while (!cancellationToken.IsCancellationRequested)
+
+         Task.Run(async () =>
          {
-            if (!connectedToGateway)
+            try
             {
-               connectedToGateway = ConnectGateway();
+               while (!cancellationToken.IsCancellationRequested)
+               {
+                  //Task tcpTask = Task.Run(() =>
+                  //{
+                  //   TcpWorker(cancellationToken);
+                  //}, cancellationToken);
+
+                  //Task udTask = Task.Run(() =>
+                  //{
+                  //   UdpWorker(cancellationToken);
+                  //}, cancellationToken);
+
+                  //Task.WaitAll(new Task[] { tcpTask, udTask }, cancellationToken);
+
+                  bool connectedToGateway = false;
+
+                  if (!connectedToGateway)
+                  {
+                     connectedToGateway = ConnectGateway();
+                  }
+
+                  // TODO: This loop will just continue to run after connected to gateway. It should check status and attempt to recycle and reconnect when needed.
+                  Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
+
+                  //Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
+
+                  //var tokenSource = new CancellationTokenSource();
+                  //cancellationToken.Register(() => { tokenSource.Cancel(); });
+
+                  //try
+                  //{
+                  //   using (IServiceScope scope = scopeFactory.CreateScope())
+                  //   {
+                  //      Runner runner = scope.ServiceProvider.GetService<Runner>();
+                  //      System.Collections.Generic.IEnumerable<Task> runningTasks = runner.RunAll(tokenSource);
+
+                  //      Task.WaitAll(runningTasks.ToArray(), cancellationToken);
+
+                  //      if (cancellationToken.IsCancellationRequested)
+                  //      {
+                  //         tokenSource.Cancel();
+                  //      }
+                  //   }
+
+                  //   break;
+                  //}
+                  //catch (OperationCanceledException)
+                  //{
+                  //   // do nothing the task was cancel.
+                  //   throw;
+                  //}
+                  //catch (AggregateException ae)
+                  //{
+                  //   if (ae.Flatten().InnerExceptions.OfType<SyncRestartException>().Any())
+                  //   {
+                  //      log.LogInformation("Sync: ### - Restart requested - ###");
+                  //      log.LogTrace("Sync: Signalling token cancelation");
+                  //      tokenSource.Cancel();
+
+                  //      continue;
+                  //   }
+
+                  //   foreach (Exception innerException in ae.Flatten().InnerExceptions)
+                  //   {
+                  //      log.LogError(innerException, "Sync");
+                  //   }
+
+                  //   tokenSource.Cancel();
+
+                  //   int retryInterval = 10;
+
+                  //   log.LogWarning($"Unexpected error retry in {retryInterval} seconds");
+                  //   //this.tracer.ReadLine();
+
+                  //   // Blokcore Indexer is designed to be idempotent, we want to continue running even if errors are found.
+                  //   // so if an unepxected error happened we log it wait and start again
+
+                  //   Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
+
+                  //   continue;
+                  //}
+                  //catch (Exception ex)
+                  //{
+                  //   log.LogError(ex, "Sync");
+                  //   break;
+                  //}
+               }
+            }
+            catch (OperationCanceledException)
+            {
+               // do nothing the task was cancel.
+               throw;
+            }
+            catch (Exception ex)
+            {
+               log.LogError(ex, "Gateway");
+               throw;
             }
 
-            //log.LogInformation("Hub Service is alive.");
-            //Task.WaitAll(new Task[] { tcpTask, udTask }, cancellationToken);
-            Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
-         }
+         }, cancellationToken);
 
          return Task.CompletedTask;
       }
