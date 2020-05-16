@@ -62,6 +62,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Blockcore.Hub.Networking.Managers;
+using Microsoft.AspNetCore.SignalR;
+using Blockcore.Hub.Networking.Hubs;
 
 namespace Blockcore.Hub.Networking.Managers
 {
@@ -86,6 +88,8 @@ namespace Blockcore.Hub.Networking.Managers
       private Thread ThreadTCPListen;
       private Thread ThreadUDPListen;
       private bool _TCPListen = false;
+
+      private readonly IHubContext<WebSocketHub> hubContext;
 
       public bool TCPListen
       {
@@ -122,12 +126,13 @@ namespace Blockcore.Hub.Networking.Managers
          IOptions<ChainSettings> chainSettings,
          IOptions<HubSettings> hubSettings,
          IServiceProvider serviceProvider,
+         IHubContext<WebSocketHub> hubContext,
          HubConnectionManager connectionManager)
       {
          this.log = log;
          this.chainSettings = chainSettings.Value;
          this.hubSettings = hubSettings.Value;
-
+         this.hubContext = hubContext;
          this.serviceProvider = serviceProvider;
 
          Connections = connectionManager;
@@ -188,48 +193,55 @@ namespace Blockcore.Hub.Networking.Managers
             }
 
             log.LogInformation(entry.ToString());
+            hubContext.Clients.All.SendAsync("ConnectionAddedEvent", entry.ToString());
          });
 
          hub.Subscribe<ConnectionRemovedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
+            hubContext.Clients.All.SendAsync("ConnectionRemovedEvent", e.Data);
          });
 
          hub.Subscribe<ConnectionStartedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionStartedEvent: {e.Endpoint}");
+            hubContext.Clients.All.SendAsync("ConnectionStartedEvent", e.Endpoint.ToString());
          });
 
          hub.Subscribe<ConnectionStartingEvent>(this, e =>
          {
-            log.LogInformation($"ConnectionStartedEvent: {e.Data.Id}");
+            log.LogInformation($"ConnectionStartingEvent: {e.Data.Id}");
+            hubContext.Clients.All.SendAsync("ConnectionStartingEvent", e.Data.Id.ToString());
          });
 
          hub.Subscribe<ConnectionUpdatedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionUpdatedEvent: {e.Data.Id}");
+            hubContext.Clients.All.SendAsync("ConnectionUpdatedEvent", e.Data.Id.ToString());
          });
 
          hub.Subscribe<GatewayConnectedEvent>(this, e =>
          {
             log.LogInformation("Connected to Gateway");
+            hubContext.Clients.All.SendAsync("GatewayConnectedEvent");
          });
 
          hub.Subscribe<GatewayShutdownEvent>(this, e =>
          {
             log.LogInformation("Disconnected from Gateway");
+            hubContext.Clients.All.SendAsync("GatewayShutdownEvent");
          });
 
          hub.Subscribe<HubInfoEvent>(this, e =>
          {
+            hubContext.Clients.All.SendAsync("HubInfoEvent", e.Data);
          });
 
          hub.Subscribe<MessageReceivedEvent>(this, e =>
          {
             log.LogInformation($"MessageReceivedEvent: {e.Data.Content}");
+            hubContext.Clients.All.SendAsync("MessageReceivedEvent", e.Data.Content);
          });
-
-
 
          Task.Run(async () =>
          {

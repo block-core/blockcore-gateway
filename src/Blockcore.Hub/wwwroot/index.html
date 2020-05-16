@@ -21,8 +21,9 @@
             font-size: 18px;
         }
 
-        .chat {
+        .log {
             min-height: 400px;
+            max-height: 400px;
             border: 1px solid gray;
             padding: 1em;
             overflow-y: scroll;
@@ -55,7 +56,7 @@
 
     <button onclick="broadcast()">Broadcast</button>
 
-    <div class="chat">
+    <div id="log" class="log">
 
     </div>
 
@@ -66,8 +67,6 @@
             .configureLogging(signalR.LogLevel.Information)
             .build();
 
-        var hub = connection.start();
-
         document.getElementById('message').addEventListener('keypress', function (event) {
             if (event.keyCode == 13) {
                 event.preventDefault();
@@ -75,8 +74,59 @@
             }
         });
 
-        connection.on("Command", (result) => {
-            console.log(result);
+        var logElement = document.getElementById('log');
+
+        var previousElement = null;
+
+        function addLog(event, result) {
+            console.log(event + ': ', result);
+            var tag = document.createElement("p");
+            tag.appendChild(document.createTextNode(event + ': '));
+            tag.appendChild(document.createTextNode(JSON.stringify(result)));
+
+            if (previousElement == null) {
+                logElement.appendChild(tag);
+            } else {
+                logElement.insertBefore(tag, previousElement);
+            }
+
+            previousElement = tag;
+        }
+
+        connection.on("ConnectionAddedEvent", (result) => {
+            addLog('ConnectionAddedEvent', result);
+        });
+
+        connection.on("ConnectionRemovedEvent", (result) => {
+            addLog('ConnectionRemovedEvent', result);
+        });
+
+        connection.on("ConnectionStartedEvent", (result) => {
+            addLog('ConnectionStartedEvent', result);
+        });
+
+        connection.on("ConnectionStartingEvent", (result) => {
+            addLog('ConnectionStartingEvent', result);
+        });
+
+        connection.on("ConnectionUpdatedEvent", (result) => {
+            addLog('ConnectionUpdatedEvent', result);
+        });
+
+        connection.on("GatewayConnectedEvent", (result) => {
+            addLog('GatewayConnectedEvent', result);
+        });
+
+        connection.on("GatewayShutdownEvent", (result) => {
+            addLog('GatewayShutdownEvent', result);
+        });
+
+        connection.on("HubInfoEvent", (result) => {
+            addLog('HubInfoEvent', result);
+        });
+
+        connection.on("MessageReceivedEvent", (result) => {
+            addLog('MessageReceivedEvent', result);
         });
 
         function broadcast() {
@@ -88,6 +138,8 @@
             console.log('Broadcast: ' + publicKey + ': ' + message);
             connection.invoke("Broadcast", publicKey, message).catch(err => console.error(err));
         }
+
+        var hub = connection.start();
     </script>
 
 </body>
