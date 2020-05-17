@@ -1018,6 +1018,9 @@ pre {
   margin-bottom: 2em;
 }
 
+router-outlet {
+  display: none;
+}
 
 .app-area {
   display: grid;
@@ -1026,7 +1029,7 @@ pre {
   gap: 1px 1px;
   grid-template-areas: "app-area-left app-area-middle app-area-right";
   height: 100%;
-  max-height: 400px;
+  min-height: 100%;
 }
 
 .app-area-right { grid-area: app-area-right; }

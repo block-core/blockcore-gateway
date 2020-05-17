@@ -7,5 +7,16 @@
    </div>
    <div class="app-area-right">
       <h2>Hubs</h2>
+
+      <div class="message" *ngFor="let peer of peerService.peers">
+         
+         <div class="peer-item">
+            <strong>{{peer.data.name}}</strong> ({{peer.data.internalEndpoint}}) - {{peer.data.command}}|{{peer.data.connectionType}}<br>
+
+            <div class="peer-item-address" *ngFor="let address of peer.data.internalAddresses">{{address}}</div>
+         </div>
+      
+      </div>
+
    </div>
 </div>

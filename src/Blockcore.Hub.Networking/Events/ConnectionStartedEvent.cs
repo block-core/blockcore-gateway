@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Blockcore.Platform.Networking.Events
 {
-   public class ConnectionStartedEvent
+   public class ConnectionStartedEvent : BaseEvent
    {
       public HubInfo Data { get; set; }
 

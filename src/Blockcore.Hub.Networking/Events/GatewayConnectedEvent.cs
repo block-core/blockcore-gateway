@@ -1,6 +1,6 @@
 namespace Blockcore.Platform.Networking.Events
 {
-   public class GatewayConnectedEvent
+   public class GatewayConnectedEvent : BaseEvent
    {
    }
 }

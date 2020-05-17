@@ -2,10 +2,12 @@ import { Component, HostBinding, OnInit, OnDestroy, NgZone } from '@angular/core
 import { ApiService } from '../services/api.service';
 import { SetupService } from '../services/setup.service';
 import { Message, HubService } from '../services/hub.service';
+import { PeerService } from '../services/peer.service';
 
 @Component({
   selector: 'app-hubs-component',
-  templateUrl: './hubs.component.html'
+  templateUrl: './hubs.component.html',
+  styleUrls: ['./hubs.component.css']
 })
 export class HubsComponent implements OnInit, OnDestroy {
   // @HostBinding('class.content-centered-top') hostClass = true;
@@ -31,8 +33,9 @@ export class HubsComponent implements OnInit, OnDestroy {
   // message = new Message();
 
   constructor(
+    public peerService: PeerService,
     private chatService: HubService,
-    private _ngZone: NgZone,
+    private ngZone: NgZone,
     public setup: SetupService) {
 
     // this.subscription = this.setup.currentChain$.subscribe(async (chain) => {
@@ -64,7 +67,7 @@ export class HubsComponent implements OnInit, OnDestroy {
   private subscribeToEvents(): void {
 
     this.chatService.eventReceived.subscribe((message: Message) => {
-      this._ngZone.run(() => {
+      this.ngZone.run(() => {
 
         console.log('MESSAGE FROM HUB: ', message);
 

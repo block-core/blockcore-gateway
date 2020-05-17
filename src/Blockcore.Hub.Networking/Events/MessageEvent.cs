@@ -2,7 +2,7 @@ using Blockcore.Platform.Networking.Entities;
 
 namespace Blockcore.Platform.Networking.Events
 {
-   public class MessageReceivedEvent
+   public class MessageReceivedEvent : BaseEvent
    {
       public string From { get; set; }
 

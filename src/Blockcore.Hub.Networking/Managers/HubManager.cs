@@ -67,18 +67,18 @@ using Blockcore.Hub.Networking.Hubs;
 
 namespace Blockcore.Hub.Networking.Managers
 {
-   public class MessageModel
-   {
-      public string Type { get; set; }
+   //public class MessageModel
+   //{
+   //   public string Type { get; set; }
 
-      public string Message { get; set; }
+   //   public string Message { get; set; }
 
-      public DateTime Date { get; set; }
+   //   public DateTime Date { get; set; }
 
-      public string ClientUniqueId { get; set; }
+   //   public string ClientUniqueId { get; set; }
 
-      public dynamic Data { get; set; }
-   }
+   //   public dynamic Data { get; set; }
+   //}
 
    public class HubManager : IDisposable
    {
@@ -207,154 +207,156 @@ namespace Blockcore.Hub.Networking.Managers
 
             log.LogInformation(entry.ToString());
 
-            var msg = new MessageModel
-            {
-               Type = "ConnectionAddedEvent",
-               Date = DateTime.UtcNow,
-               Message = entry.ToString(),
-               Data = entry.ToString()
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "ConnectionAddedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = entry.ToString(),
+            //   Data = e
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<ConnectionRemovedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
 
-            var msg = new MessageModel
-            {
-               Type = "ConnectionRemovedEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Data.ToString(),
-               Data = e.Data
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "ConnectionRemovedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Data.ToString(),
+            //   Data = e.Data
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<ConnectionStartedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionStartedEvent: {e.Endpoint}");
 
-            var msg = new MessageModel
-            {
-               Type = "ConnectionStartedEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Endpoint.ToString(),
-               Data = e.Endpoint.ToString()
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "ConnectionStartedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Endpoint.ToString(),
+            //   Data = e.Endpoint.ToString()
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<ConnectionStartingEvent>(this, e =>
          {
             log.LogInformation($"ConnectionStartingEvent: {e.Data.Id}");
 
-            var msg = new MessageModel
-            {
-               Type = "ConnectionStartingEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Data.Id.ToString(),
-               Data = e.Data.Id.ToString()
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "ConnectionStartingEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Data.Id.ToString(),
+            //   Data = e.Data.Id.ToString()
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<ConnectionUpdatedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionUpdatedEvent: {e.Data.Id}");
 
-            var msg = new MessageModel
-            {
-               Type = "ConnectionUpdatedEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Data.Id.ToString(),
-               Data = e.Data.Id
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "ConnectionUpdatedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Data.Id.ToString(),
+            //   Data = e.Data.Id
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<GatewayConnectedEvent>(this, e =>
          {
             log.LogInformation("Connected to Gateway");
 
-            var msg = new MessageModel
-            {
-               Type = "GatewayConnectedEvent",
-               Date = DateTime.UtcNow,
-               Message = "",
-               Data = ""
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "GatewayConnectedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = "",
+            //   Data = ""
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<GatewayShutdownEvent>(this, e =>
          {
             log.LogInformation("Disconnected from Gateway");
 
-            var msg = new MessageModel
-            {
-               Type = "GatewayShutdownEvent",
-               Date = DateTime.UtcNow,
-               Message = "",
-               Data = ""
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "GatewayShutdownEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = "",
+            //   Data = ""
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<HubInfoEvent>(this, e =>
          {
-            var msg = new MessageModel
-            {
-               Type = "HubInfoEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Data.ToString(),
-               Data = e.Data
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "HubInfoEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Data.ToString(),
+            //   Data = e.Data
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<MessageReceivedEvent>(this, e =>
          {
             log.LogInformation($"MessageReceivedEvent: {e.Data.Content}");
 
-            var msg = new MessageModel
-            {
-               Type = "MessageReceivedEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Data.Content,
-               Data = e.Data.Content
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "MessageReceivedEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Data.Content,
+            //   Data = e.Data.Content
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          hub.Subscribe<GatewayErrorEvent>(this, e =>
          {
             log.LogInformation($"GatewayErrorEvent: {e.Message}");
 
-            var msg = new MessageModel
-            {
-               Type = "GatewayErrorEvent",
-               Date = DateTime.UtcNow,
-               Message = e.Message,
-               Data = e.Message
-            };
+            //var msg = new MessageModel
+            //{
+            //   Type = "GatewayErrorEvent",
+            //   Date = DateTime.UtcNow,
+            //   Message = e.Message,
+            //   Data = e.Message
+            //};
 
-            hubContext.Clients.All.SendAsync("Event", msg);
+            hubContext.Clients.All.SendAsync("Event", e);
          });
 
          Task.Run(async () =>
          {
             try
             {
+               bool connectedToGateway = false;
+
                while (!cancellationToken.IsCancellationRequested)
                {
                   //Task tcpTask = Task.Run(() =>
@@ -368,8 +370,6 @@ namespace Blockcore.Hub.Networking.Managers
                   //}, cancellationToken);
 
                   //Task.WaitAll(new Task[] { tcpTask, udTask }, cancellationToken);
-
-                  bool connectedToGateway = false;
 
                   if (!connectedToGateway)
                   {

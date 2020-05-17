@@ -1,0 +1,14 @@
+.peer-item {
+
+}
+
+.peer-item-address {
+   color: gray;
+}
+
+.peer-item {
+   box-shadow: 0px 8px 16px 0px var(--shadow);
+   border: 1px solid var(--foreground-light);
+   padding: 0.5em;
+   background-color: var(--box-background);
+ }
