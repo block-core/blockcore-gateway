@@ -75,7 +75,6 @@
         });
 
         var logElement = document.getElementById('log');
-
         var previousElement = null;
 
         function addLog(event, result) {
@@ -127,6 +126,10 @@
 
         connection.on("MessageReceivedEvent", (result) => {
             addLog('MessageReceivedEvent', result);
+        });
+
+        connection.on("GatewayErrorEvent", (result) => {
+            addLog('GatewayErrorEvent', result);
         });
 
         function broadcast() {

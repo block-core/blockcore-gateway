@@ -67,6 +67,19 @@ using Blockcore.Hub.Networking.Hubs;
 
 namespace Blockcore.Hub.Networking.Managers
 {
+   public class MessageModel
+   {
+      public string Type { get; set; }
+
+      public string Message { get; set; }
+
+      public DateTime Date { get; set; }
+
+      public string ClientUniqueId { get; set; }
+
+      public dynamic Data { get; set; }
+   }
+
    public class HubManager : IDisposable
    {
       readonly int retryInterval = 10;
@@ -193,54 +206,149 @@ namespace Blockcore.Hub.Networking.Managers
             }
 
             log.LogInformation(entry.ToString());
-            hubContext.Clients.All.SendAsync("ConnectionAddedEvent", entry.ToString());
+
+            var msg = new MessageModel
+            {
+               Type = "ConnectionAddedEvent",
+               Date = DateTime.UtcNow,
+               Message = entry.ToString(),
+               Data = entry.ToString()
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<ConnectionRemovedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
-            hubContext.Clients.All.SendAsync("ConnectionRemovedEvent", e.Data);
+
+            var msg = new MessageModel
+            {
+               Type = "ConnectionRemovedEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Data.ToString(),
+               Data = e.Data
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<ConnectionStartedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionStartedEvent: {e.Endpoint}");
-            hubContext.Clients.All.SendAsync("ConnectionStartedEvent", e.Endpoint.ToString());
+
+            var msg = new MessageModel
+            {
+               Type = "ConnectionStartedEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Endpoint.ToString(),
+               Data = e.Endpoint.ToString()
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<ConnectionStartingEvent>(this, e =>
          {
             log.LogInformation($"ConnectionStartingEvent: {e.Data.Id}");
-            hubContext.Clients.All.SendAsync("ConnectionStartingEvent", e.Data.Id.ToString());
+
+            var msg = new MessageModel
+            {
+               Type = "ConnectionStartingEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Data.Id.ToString(),
+               Data = e.Data.Id.ToString()
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<ConnectionUpdatedEvent>(this, e =>
          {
             log.LogInformation($"ConnectionUpdatedEvent: {e.Data.Id}");
-            hubContext.Clients.All.SendAsync("ConnectionUpdatedEvent", e.Data.Id.ToString());
+
+            var msg = new MessageModel
+            {
+               Type = "ConnectionUpdatedEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Data.Id.ToString(),
+               Data = e.Data.Id
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<GatewayConnectedEvent>(this, e =>
          {
             log.LogInformation("Connected to Gateway");
-            hubContext.Clients.All.SendAsync("GatewayConnectedEvent");
+
+            var msg = new MessageModel
+            {
+               Type = "GatewayConnectedEvent",
+               Date = DateTime.UtcNow,
+               Message = "",
+               Data = ""
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<GatewayShutdownEvent>(this, e =>
          {
             log.LogInformation("Disconnected from Gateway");
-            hubContext.Clients.All.SendAsync("GatewayShutdownEvent");
+
+            var msg = new MessageModel
+            {
+               Type = "GatewayShutdownEvent",
+               Date = DateTime.UtcNow,
+               Message = "",
+               Data = ""
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<HubInfoEvent>(this, e =>
          {
-            hubContext.Clients.All.SendAsync("HubInfoEvent", e.Data);
+            var msg = new MessageModel
+            {
+               Type = "HubInfoEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Data.ToString(),
+               Data = e.Data
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          hub.Subscribe<MessageReceivedEvent>(this, e =>
          {
             log.LogInformation($"MessageReceivedEvent: {e.Data.Content}");
-            hubContext.Clients.All.SendAsync("MessageReceivedEvent", e.Data.Content);
+
+            var msg = new MessageModel
+            {
+               Type = "MessageReceivedEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Data.Content,
+               Data = e.Data.Content
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
+         });
+
+         hub.Subscribe<GatewayErrorEvent>(this, e =>
+         {
+            log.LogInformation($"GatewayErrorEvent: {e.Message}");
+
+            var msg = new MessageModel
+            {
+               Type = "GatewayErrorEvent",
+               Date = DateTime.UtcNow,
+               Message = e.Message,
+               Data = e.Message
+            };
+
+            hubContext.Clients.All.SendAsync("Event", msg);
          });
 
          Task.Run(async () =>
@@ -402,6 +510,7 @@ namespace Blockcore.Hub.Networking.Managers
          catch (Exception ex)
          {
             log.LogError($"Error when connecting to gateway {ServerEndpoint.ToString()}. Will retry again soon...", ex);
+            hub.Publish(new GatewayErrorEvent($"Error when connecting to gateway {ServerEndpoint.ToString()}. Will retry again soon..."));
          }
 
          return false;

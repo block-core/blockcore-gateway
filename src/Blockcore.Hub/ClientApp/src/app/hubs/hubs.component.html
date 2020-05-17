@@ -1,0 +1,11 @@
+<div class="app-area">
+   <div class="app-area-left">
+   </div>
+   <div class="app-area-middle" *ngIf="messages">
+      <h3>Events</h3>
+      <div class="message" *ngFor="let item of messages">{{item | json}}</div>
+   </div>
+   <div class="app-area-right">
+      <h2>Hubs</h2>
+   </div>
+</div>

@@ -9,6 +9,7 @@ using Blockcore.Settings;
 using Blockcore.Utilities.JsonConverters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,7 +51,16 @@ namespace Blockcore.Hub
             services.AddSingleton(typeof(IHubMessageHandler), t);
          });
 
-         services.AddControllers();
+         services.AddResponseCompression();
+
+         // services.AddControllers();
+
+         services.AddControllersWithViews();
+         // In production, the Angular files will be served from this directory
+         services.AddSpaStaticFiles(configuration =>
+         {
+            configuration.RootPath = "ClientApp/dist";
+         });
 
          services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
          {
@@ -90,9 +100,16 @@ namespace Blockcore.Hub
             app.UseDeveloperExceptionPage();
          }
 
+         app.UseResponseCompression();
+
          app.UseDefaultFiles();
 
          app.UseStaticFiles();
+
+         if (!env.IsDevelopment())
+         {
+            app.UseSpaStaticFiles();
+         }
 
          app.UseRouting();
 
@@ -102,6 +119,20 @@ namespace Blockcore.Hub
          {
             endpoints.MapHub<WebSocketHub>("/ws");
             endpoints.MapControllers();
+         });
+
+         app.UseSpa(spa =>
+         {
+            // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            // see https://go.microsoft.com/fwlink/?linkid=864501
+
+            spa.Options.SourcePath = "ClientApp";
+            // spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+
+            if (env.IsDevelopment())
+            {
+               spa.UseAngularCliServer(npmScript: "start");
+            }
          });
       }
    }

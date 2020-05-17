@@ -21,6 +21,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blockcore.Hub.Networking.Hubs
 {
+   public class MessageModel
+   {
+      public string PublicKey { get; set; }
+
+      public string Message { get; set; }
+   }
+
    public class WebSocketHub : Microsoft.AspNetCore.SignalR.Hub
    {
       private readonly ILogger<WebSocketHub> log;
@@ -39,9 +46,9 @@ namespace Blockcore.Hub.Networking.Hubs
       /// </summary>
       /// <param name="message">Any message to echo back.</param>
       /// <returns>Returns the same message supplied.</returns>
-      public void Broadcast(string publickey, string message)
+      public void Broadcast(MessageModel message)
       {
-         var msg = new Message { From = publickey, To = "Everyone", Content = message, RecipientId = 1 };
+         var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message, RecipientId = 1 };
 
          hubManager.SendMessageTCP(msg);
          //return Clients.Caller.SendAsync("Message", message);
