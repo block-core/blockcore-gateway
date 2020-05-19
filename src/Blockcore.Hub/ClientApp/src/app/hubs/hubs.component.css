@@ -12,3 +12,7 @@
    padding: 0.5em;
    background-color: var(--box-background);
  }
+
+ .peer-item-connected-lan {
+    background-color: var(--box-positive-background);
+ }

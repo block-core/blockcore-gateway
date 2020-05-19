@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Blockcore.Platform.Networking.Entities
 {
@@ -49,7 +50,7 @@ namespace Blockcore.Platform.Networking.Entities
             InternalEndpoint = IPEndPoint.Parse(message.InternalEndpoint);
          }
 
-         ConnectionType = message.ConnectionType;
+         ConnectionType = Enum.Parse<ConnectionTypes>(message.ConnectionType);
 
          if (message.InternalAddresses != null)
          {
@@ -73,7 +74,7 @@ namespace Blockcore.Platform.Networking.Entities
             //}
 
             Name = message.Name;
-            ConnectionType = message.ConnectionType;
+            ConnectionType = Enum.Parse<ConnectionTypes>(message.ConnectionType);
             FirstName = message.FirstName;
 
             // It is very important to only set value if it is different than null, 
@@ -134,7 +135,6 @@ namespace Blockcore.Platform.Networking.Entities
             return Name + " (UDP Endpoint Unknown)";
       }
 
-
       public HubInfo Simplified()
       {
          var msg = new HubInfo();
@@ -156,7 +156,7 @@ namespace Blockcore.Platform.Networking.Entities
          msg.Id = Id;
          msg.ExternalEndpoint = ExternalEndpoint?.ToString();
          msg.InternalEndpoint = InternalEndpoint?.ToString();
-         msg.ConnectionType = ConnectionType;
+         msg.ConnectionType = ConnectionType.ToString();
          msg.InternalAddresses = InternalAddresses.Select(a => a.ToString()).ToList();
          msg.FirstName = "SONDRE!";
 

@@ -64,6 +64,16 @@ export class HubsComponent implements OnInit, OnDestroy {
   //   }
   // }
 
+  connect(id) {
+    console.log('Connect to: ', id);
+    this.chatService.connectToPeer(id);
+  }
+
+  disconnect(id) {
+    console.log('Connect to: ', id);
+    this.chatService.disconnectToPeer(id);
+  }
+
   private subscribeToEvents(): void {
 
     this.chatService.eventReceived.subscribe((message: Message) => {

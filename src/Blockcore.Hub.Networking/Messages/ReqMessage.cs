@@ -8,14 +8,14 @@ namespace Blockcore.Platform.Networking.Messages
       public override ushort Command => MessageTypes.REQ;
 
       [Key(1)]
-      public long RecipientId { get; set; }
+      public string RecipientId { get; set; }
 
       public ReqMessage()
       {
 
       }
 
-      public ReqMessage(long senderId, long recipientID)
+      public ReqMessage(string senderId, string recipientID)
       {
          Id = senderId;
          RecipientId = recipientID;

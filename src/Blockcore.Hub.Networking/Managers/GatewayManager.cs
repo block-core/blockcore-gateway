@@ -205,7 +205,9 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void BroadcastTCP(IBaseEntity Item)
       {
-         foreach (HubInfo CI in Connections.Connections.Where(x => x.Client != null))
+         List<HubInfo> connections = Connections.GetBroadcastConnections(true);
+
+         foreach (HubInfo CI in connections)
          {
             SendTCP(Item, CI.Client);
          }
@@ -213,8 +215,12 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void BroadcastUDP(IBaseEntity Item)
       {
-         foreach (HubInfo CI in Connections.Connections)
+         List<HubInfo> connections = Connections.GetBroadcastConnections(false);
+
+         foreach (HubInfo CI in connections)
+         {
             SendUDP(Item, CI.ExternalEndpoint);
+         }
       }
 
       public TcpListener Tcp { get { return tcp; } }
@@ -235,19 +241,19 @@ namespace Blockcore.Hub.Networking.Managers
 
       }
 
-      public void Disconnect(TcpClient Client)
+      public void Disconnect(TcpClient client)
       {
-         HubInfo CI = Connections.Connections.FirstOrDefault(x => x.Client == Client);
+         HubInfo hubInfo = Connections.GetConnection(client);
 
-         if (CI != null)
+         if (hubInfo != null)
          {
-            Connections.RemoveConnection(CI);
+            Connections.RemoveConnection(hubInfo);
 
-            log.LogInformation($"Client disconnected {Client.Client.RemoteEndPoint}");
+            log.LogInformation($"Client disconnected {client.Client.RemoteEndPoint}");
 
-            Client.Close();
+            client.Close();
 
-            BroadcastTCP(new Notification(NotificationsTypes.Disconnected, CI.Id));
+            BroadcastTCP(new Notification(NotificationsTypes.Disconnected, hubInfo.Id));
          }
       }
 

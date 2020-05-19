@@ -41,6 +41,22 @@ namespace Blockcore.Hub.Networking.Hubs
          this.hubManager = hubManager;
       }
 
+      public void ConnectToPeer(string peerId)
+      {
+         hubManager.ConnectToClient(peerId);
+
+         // Send message to connect us to a specified hub.
+         //hubManager.SendMessageTCP(new ReqMessage(hubManager.LocalHubInfo.Id, peerId));
+      }
+
+      public void DisconnectToPeer(string peerId)
+      {
+         hubManager.DisconnectToClient(peerId);
+
+         // Send message to connect us to a specified hub.
+         //hubManager.SendMessageTCP(new ReqMessage(hubManager.LocalHubInfo.Id, peerId));
+      }
+
       /// <summary>
       /// Basic echo method that can be used to verify connection.
       /// </summary>

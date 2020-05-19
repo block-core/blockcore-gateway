@@ -18,6 +18,7 @@ html {
 
    --shadow: rgba(0,0,0,0.2);
    --box-background: #f5f5f5;
+   --box-positive-background: #b1e29b;
  }
  
  html[data-theme="dark"] {
@@ -39,6 +40,7 @@ html {
 
    --shadow: rgba(255,255,255,0.1);
    --box-background: #0f0f0f;
+   --box-positive-background: #b1e29b;
  
    --mode-filter: invert(100%);
  }

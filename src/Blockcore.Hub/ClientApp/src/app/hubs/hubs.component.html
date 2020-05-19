@@ -10,10 +10,12 @@
 
       <div class="message" *ngFor="let peer of peerService.peers">
          
-         <div class="peer-item">
-            <strong>{{peer.data.name}}</strong> ({{peer.data.internalEndpoint}}) - {{peer.data.command}}|{{peer.data.connectionType}}<br>
-
+         <div class="peer-item" [ngClass]="{'peer-item-connected-lan': peer.data.connectionType === 'LAN'}">
+            <strong>{{peer.data.name}}</strong> ({{peer.data.externalEndpoint}})
+            <br>{{peer.data.command}}|{{peer.data.connectionType}}|{{peer.data.internalEndpoint}}<br>
             <div class="peer-item-address" *ngFor="let address of peer.data.internalAddresses">{{address}}</div>
+
+            <button *ngIf="peer.data.connectionType === 'Unknown'" (click)="connect(peer.data.id)">Connect</button><button *ngIf="peer.data.connectionType !== 'Unknown'" (click)="disconnect(peer.data.id)">Disconnect</button>
          </div>
       
       </div>

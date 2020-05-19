@@ -40,18 +40,19 @@ export class PeerService {
 
    constructor(private hubService: HubService, private ngZone: NgZone) {
 
-      this.peers.push( {
-         eventName: 'ConnectionUpdatedEvent',
-         data: {
-            command: 0,
-            connectionType: 0,
-            externalEndpoint: '192.168.1.1|52881',
-            id: 637253441645118100,
-            internalAddresses: ['192.168.1.34', '192.168.9.97'],
-            internalEndpoint: '0.0.0.0|52881',
-            name: 'COMPUTER'
-         }
-      });
+      // TEST DATA FOR UI
+      // this.peers.push( {
+      //    eventName: 'ConnectionUpdatedEvent',
+      //    data: {
+      //       command: 0,
+      //       connectionType: 'LAN',
+      //       externalEndpoint: '192.168.1.1|52881',
+      //       id: 637253441645118100,
+      //       internalAddresses: ['192.168.1.34', '192.168.9.97'],
+      //       internalEndpoint: '0.0.0.0|52881',
+      //       name: 'COMPUTER'
+      //    }
+      // });
 
       this.hubService.eventReceived.subscribe((message: HubEvent) => {
          this.ngZone.run(() => {
@@ -62,6 +63,9 @@ export class PeerService {
                const indexToRemove = this.peers.findIndex(p => p.data.id === message.data.id);
                this.peers.splice(indexToRemove);
             } else if (message.eventName === 'ConnectionUpdatedEvent') {
+               const indexToUpdate = this.peers.findIndex(p => p.data.id === message.data.id);
+               this.peers[indexToUpdate] = message;
+            } else if (message.eventName === 'ConnectionStartedEvent') {
                const indexToUpdate = this.peers.findIndex(p => p.data.id === message.data.id);
                this.peers[indexToUpdate] = message;
             }

@@ -13,7 +13,7 @@ namespace Blockcore.Platform.Networking.Messages
       public abstract ushort Command { get; }
 
       [Key(0)]
-      public long Id { get; set; }
+      public string Id { get; set; }
    }
 
    //public interface BaseMessage

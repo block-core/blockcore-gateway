@@ -1,69 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Blockcore.Settings;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Blockcore.Platform.Networking;
-using Blockcore.Platform.Networking.Events;
-using Blockcore.Platform.Networking.Entities;
-using Blockcore.Platform.Networking.Events;
-using Microsoft.Extensions.Logging;
-using PubSub;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using Blockcore.Platform.Networking.Messages;
-using System;
-using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Hub.Networking.Hubs;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking;
 using Blockcore.Platform.Networking.Entities;
+using Blockcore.Platform.Networking.Events;
+using Blockcore.Platform.Networking.Messages;
 using Blockcore.Settings;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Blockcore.Platform.Networking.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Blockcore.Hub.Networking.Services;
-using Blockcore.Platform;
-using Blockcore.Platform.Networking;
-using Blockcore.Settings;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Blockcore.Hub.Networking.Managers;
-using Microsoft.AspNetCore.SignalR;
-using Blockcore.Hub.Networking.Hubs;
 
 namespace Blockcore.Hub.Networking.Managers
 {
@@ -96,8 +50,8 @@ namespace Blockcore.Hub.Networking.Managers
       public List<Ack> AckResponces { get; private set; }
 
       private IPAddress internetAccessAdapter;
-      private TcpClient TCPClient = new TcpClient();
-      private readonly UdpClient UDPClient = new UdpClient();
+      private TcpClient TCPClientGateway = new TcpClient();
+      private readonly UdpClient UDPClientGateway = new UdpClient();
       private Thread ThreadTCPListen;
       private Thread ThreadUDPListen;
       private bool _TCPListen = false;
@@ -168,13 +122,14 @@ namespace Blockcore.Hub.Networking.Managers
          LocalHubInfo = new HubInfo();
          AckResponces = new List<Ack>();
 
-         UDPClient.AllowNatTraversal(true);
-         UDPClient.Client.SetIPProtectionLevel(IPProtectionLevel.Unrestricted);
-         UDPClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+         UDPClientGateway.AllowNatTraversal(true);
+         UDPClientGateway.Client.SetIPProtectionLevel(IPProtectionLevel.Unrestricted);
+         UDPClientGateway.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
          LocalHubInfo.Name = Environment.MachineName;
          LocalHubInfo.ConnectionType = ConnectionTypes.Unknown;
-         LocalHubInfo.Id = DateTime.Now.Ticks;
+         LocalHubInfo.Id = Guid.NewGuid().ToString();
+         //LocalHubInfo.Id = DateTime.Now.Ticks;
 
          IEnumerable<IPAddress> IPs = Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
@@ -477,21 +432,21 @@ namespace Blockcore.Hub.Networking.Managers
 
             log.LogInformation("Adapter with Internet Access: " + internetAccessAdapter);
 
-            TCPClient = new TcpClient();
-            TCPClient.Client.Connect(ServerEndpoint);
+            TCPClientGateway = new TcpClient();
+            TCPClientGateway.Client.Connect(ServerEndpoint);
 
             UDPListen = true;
             TCPListen = true;
 
             SendMessageUDP(LocalHubInfo.Simplified(), ServerEndpoint);
-            LocalHubInfo.InternalEndpoint = (IPEndPoint)UDPClient.Client.LocalEndPoint;
+            LocalHubInfo.InternalEndpoint = (IPEndPoint)UDPClientGateway.Client.LocalEndPoint;
 
             Thread.Sleep(550);
             SendMessageTCP(LocalHubInfo);
 
             Thread keepAlive = new Thread(new ThreadStart(delegate
             {
-               while (TCPClient.Connected)
+               while (TCPClientGateway.Connected)
                {
                   Thread.Sleep(5000);
                   SendMessageTCP(new KeepAlive());
@@ -518,7 +473,7 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void DisconnectedGateway()
       {
-         TCPClient.Client.Disconnect(true);
+         TCPClientGateway.Client.Disconnect(true);
 
          UDPListen = false;
          TCPListen = false;
@@ -528,7 +483,7 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void ConnectOrDisconnect()
       {
-         if (TCPClient.Connected)
+         if (TCPClientGateway.Connected)
          {
             DisconnectedGateway();
          }
@@ -566,13 +521,13 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void SendMessageTCP(IBaseEntity entity)
       {
-         if (TCPClient != null && TCPClient.Connected)
+         if (TCPClientGateway != null && TCPClientGateway.Connected)
          {
             byte[] data = messageSerializer.Serialize(entity.ToMessage());
 
             try
             {
-               NetworkStream NetStream = TCPClient.GetStream();
+               NetworkStream NetStream = TCPClientGateway.GetStream();
                NetStream.Write(data, 0, data.Length);
             }
             catch (Exception ex)
@@ -592,7 +547,7 @@ namespace Blockcore.Hub.Networking.Managers
          {
             if (data != null)
             {
-               UDPClient.Send(data, data.Length, endpoint);
+               UDPClientGateway.Send(data, data.Length, endpoint);
             }
          }
          catch (Exception ex)
@@ -613,7 +568,7 @@ namespace Blockcore.Hub.Networking.Managers
 
                   if (endpoint != null)
                   {
-                     byte[] receivedBytes = UDPClient.Receive(ref endpoint);
+                     byte[] receivedBytes = UDPClientGateway.Receive(ref endpoint);
 
                      if (receivedBytes != null)
                      {
@@ -648,7 +603,7 @@ namespace Blockcore.Hub.Networking.Managers
                try
                {
                   // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
-                  BaseMessage message = messageSerializer.Deserialize(TCPClient.GetStream());
+                  BaseMessage message = messageSerializer.Deserialize(TCPClientGateway.GetStream());
 
                   //messageProcessing.Process(message, ProtocolType.Tcp, null, TCPClient);
                   messageProcessing.Process(message, ProtocolType.Tcp);
@@ -665,6 +620,19 @@ namespace Blockcore.Hub.Networking.Managers
 
          if (TCPListen)
             ThreadTCPListen.Start();
+      }
+
+      public void ConnectToClient(string id)
+      {
+         HubInfo hub = Connections.GetConnection(id);
+         ConnectToClient(hub);
+      }
+
+      public void DisconnectToClient(string id)
+      {
+         HubInfo hub = Connections.GetConnection(id);
+
+         // TODO: Figure out where hub.Client went? We need it to disconnect.
       }
 
       public void ConnectToClient(HubInfo hubInfo)
@@ -699,7 +667,7 @@ namespace Blockcore.Hub.Networking.Managers
 
          for (int ip = 0; ip < hubInfo.InternalAddresses.Count; ip++)
          {
-            if (!TCPClient.Connected)
+            if (!TCPClientGateway.Connected)
             {
                break;
             }
@@ -709,7 +677,7 @@ namespace Blockcore.Hub.Networking.Managers
 
             for (int i = 1; i < 4; i++)
             {
-               if (!TCPClient.Connected)
+               if (!TCPClientGateway.Connected)
                {
                   break;
                }
@@ -740,7 +708,7 @@ namespace Blockcore.Hub.Networking.Managers
 
             for (int i = 1; i < 100; i++)
             {
-               if (!TCPClient.Connected)
+               if (!TCPClientGateway.Connected)
                {
                   break;
                }

@@ -26,7 +26,7 @@ namespace Blockcore.Platform.Networking.Handlers.HubHandlers
 
          if (item.Type == NotificationsTypes.Disconnected)
          {
-            Entities.HubInfo hubInfo = connections.GetConnection(long.Parse(item.Tag.ToString()));
+            Entities.HubInfo hubInfo = connections.GetConnection(item.Tag.ToString());
 
             if (hubInfo != null)
             {

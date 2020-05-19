@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Blockcore.Hub
 {
@@ -67,6 +68,8 @@ namespace Blockcore.Hub
             var settings = new JsonSerializerSettings();
             Serializer.RegisterFrontConverters(settings);
             options.PayloadSerializerSettings = settings;
+
+            options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
          });
 
          // Add service and create Policy to allow Cross-Origin Requests

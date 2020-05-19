@@ -1,6 +1,7 @@
 using Blockcore.Platform.Networking.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace Blockcore.Platform.Networking
 {
@@ -12,8 +13,7 @@ namespace Blockcore.Platform.Networking
 
    public abstract class ConnectionManager
    {
-      // TODO: Refactor dependent types to not use this collection directly.
-      public List<HubInfo> Connections { get; private set; } = new List<HubInfo>();
+      private List<HubInfo> Connections { get; } = new List<HubInfo>();
 
       public void RemoveConnection(HubInfo connection)
       {
@@ -23,9 +23,26 @@ namespace Blockcore.Platform.Networking
          }
       }
 
-      public HubInfo GetConnection(long id)
+      public HubInfo GetConnection(string id)
       {
          return Connections.FirstOrDefault(x => x.Id == id);
+      }
+
+      public HubInfo GetConnection(TcpClient client)
+      {
+         return Connections.FirstOrDefault(x => x.Client == client);
+      }
+
+      public List<HubInfo> GetBroadcastConnections(bool isTcp)
+      {
+         if (isTcp)
+         {
+            return Connections.Where(x => x.Client != null).ToList();
+         }
+         else
+         {
+            return Connections;
+         }
       }
 
       public void AddConnection(HubInfo hubInfo)

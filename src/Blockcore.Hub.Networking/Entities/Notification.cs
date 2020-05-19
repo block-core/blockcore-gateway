@@ -1,4 +1,6 @@
+using System.Text.Json.Serialization;
 using Blockcore.Platform.Networking.Messages;
+using Newtonsoft.Json;
 
 namespace Blockcore.Platform.Networking.Entities
 {

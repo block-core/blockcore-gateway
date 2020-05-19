@@ -9,7 +9,7 @@ namespace Blockcore.Platform.Networking.Messages
       public override ushort Command => MessageTypes.ACK;
 
       [Key(1)]
-      public long RecipientId { get; set; }
+      public string RecipientId { get; set; }
 
       [Key(2)]
       public bool Response { get; set; }
@@ -19,7 +19,7 @@ namespace Blockcore.Platform.Networking.Messages
 
       }
 
-      public AckMessage(long senderId)
+      public AckMessage(string senderId)
       {
          Id = senderId;
       }

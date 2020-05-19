@@ -4,7 +4,7 @@ namespace Blockcore.Platform.Networking.Entities
 {
    public abstract class BaseEntity : IBaseEntity
    {
-      public long Id { get; set; }
+      public string Id { get; set; }
 
       public virtual ushort Command { get; set; }
 

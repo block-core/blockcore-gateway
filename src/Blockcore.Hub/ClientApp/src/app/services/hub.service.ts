@@ -48,6 +48,14 @@ export class HubService {
       this._hubConnection.invoke('Broadcast', message);
    }
 
+   connectToPeer(id: number) {
+      this._hubConnection.invoke('ConnectToPeer', id);
+   }
+
+   disconnectToPeer(id: number) {
+      this._hubConnection.invoke('DisconnectToPeer', id);
+   }
+
    private createConnection() {
       this._hubConnection = new HubConnectionBuilder()
          // .withUrl(window.location.href + 'ws')
@@ -71,6 +79,9 @@ export class HubService {
 
    private registerOnServerEvents(): void {
       this._hubConnection.on('Event', (data: any) => {
+
+         console.log('DATA:', data);
+
          this.eventReceived.emit(data);
       });
    }

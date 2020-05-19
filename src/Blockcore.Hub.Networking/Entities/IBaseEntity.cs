@@ -4,7 +4,7 @@ namespace Blockcore.Platform.Networking.Entities
 {
    public interface IBaseEntity
    {
-      public long Id { get; set; }
+      public string Id { get; set; }
 
       public ushort Command { get; }
 

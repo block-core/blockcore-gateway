@@ -18,8 +18,7 @@ namespace Blockcore.Platform.Networking.Messages
       public string InternalEndpoint { get; set; }
 
       [Key(4)]
-      // TODO: Maybe this should simply be string?
-      public ConnectionTypes ConnectionType { get; set; }
+      public string ConnectionType { get; set; }
 
       [Key(5)]
       public List<string> InternalAddresses = new List<string>();

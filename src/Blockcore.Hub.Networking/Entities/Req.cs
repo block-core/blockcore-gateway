@@ -4,9 +4,9 @@ namespace Blockcore.Platform.Networking.Entities
 {
    public class Req : BaseEntity
    {
-      public long RecipientId { get; set; }
+      public string RecipientId { get; set; }
 
-      public Req(long senderId, long recipientId)
+      public Req(string senderId, string recipientId)
       {
          Id = senderId;
          RecipientId = recipientId;
