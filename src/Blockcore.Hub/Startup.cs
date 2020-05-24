@@ -43,12 +43,17 @@ namespace Blockcore.Hub
 
          services.AddSingleton<IHubMessageProcessing, HubMessageProcessing>();
          services.AddSingleton<IHubStorage, DiskStorage>();
-
          services.AddSingleton<HubConnectionManager>();
          services.AddSingleton<HubManager>();
          services.AddSingleton<WebSocketHub>();
          services.AddSingleton<CommandDispatcher>();
          services.AddHostedService<HubService>();
+
+         var availableServices = new AvailableServices();
+         availableServices.List.Add("DocumentStorage"); // Allows storage and retrieval of small documents, used by dapps.
+         availableServices.List.Add("FileSharing"); // Allows query (directory listing) and download of large binary files in an encrypted manner.
+         availableServices.List.Add("Node"); // Allows forward queries to node, including broadcast of transaction.
+         services.AddSingleton(availableServices);
 
          // Register the DataProtection service, used to protect the auto-generated recovery phrase.
          Protection.AddProtection(services);

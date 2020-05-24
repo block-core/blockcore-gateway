@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
@@ -21,6 +23,17 @@ namespace Blockcore.Hub.Storage
 
       // [JsonPropertyName("contentType")]
       public string ContentType { get; set; }
+   }
+
+   public class StorageDocumentInfo
+   {
+      public DateTime LastWriteTime { get; set; }
+
+      public DateTime CreationTime { get; set; }
+
+      public string Name { get; set; }
+
+      public long Size { get; set; }
    }
 
    /// <summary>
@@ -96,6 +109,28 @@ namespace Blockcore.Hub.Storage
          byte[] data = File.ReadAllBytes(dataFile);
          document.Data = data;
          return document;
+      }
+
+      public IEnumerable<StorageDocumentInfo> List(string type)
+      {
+         DirectoryInfo dir = new DirectoryInfo(Path.Combine(dataFolder.FullName, type));
+
+         if (!dir.Exists)
+         {
+            return null;
+         }
+
+         FileInfo[] files = dir.GetFiles();
+
+         IEnumerable<StorageDocumentInfo> fileNames = files.Select(f => new StorageDocumentInfo
+         {
+            Name = f.Name,
+            CreationTime = f.CreationTimeUtc,
+            LastWriteTime = f.LastWriteTimeUtc,
+            Size = f.Length
+         });
+
+         return fileNames;
       }
    }
 }

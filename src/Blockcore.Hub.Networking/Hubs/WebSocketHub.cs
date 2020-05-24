@@ -18,6 +18,8 @@ using Blockcore.Platform.Networking.Messages;
 using System.Security.Cryptography.X509Certificates;
 using Blockcore.Platform.Networking.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Blockcore.Hub.Networking.Services;
+using NBitcoin;
 
 namespace Blockcore.Hub.Networking.Hubs
 {
@@ -33,12 +35,14 @@ namespace Blockcore.Hub.Networking.Hubs
       private readonly ILogger<WebSocketHub> log;
       private readonly CommandDispatcher commandDispatcher;
       private readonly HubManager hubManager;
+      private readonly AvailableServices availableServices;
 
-      public WebSocketHub(ILogger<WebSocketHub> log, CommandDispatcher commandDispatcher, HubManager hubManager)
+      public WebSocketHub(ILogger<WebSocketHub> log, CommandDispatcher commandDispatcher, HubManager hubManager, AvailableServices availableServices)
       {
          this.log = log;
          this.commandDispatcher = commandDispatcher;
          this.hubManager = hubManager;
+         this.availableServices = availableServices;
       }
 
       public void ConnectToPeer(string peerId)
@@ -47,6 +51,12 @@ namespace Blockcore.Hub.Networking.Hubs
 
          // Send message to connect us to a specified hub.
          //hubManager.SendMessageTCP(new ReqMessage(hubManager.LocalHubInfo.Id, peerId));
+      }
+
+      public AvailableServices AvailableServices()
+      {
+         return availableServices;
+         //Clients.Caller.SendAsync("AvailableServices", availableServices);
       }
 
       public void DisconnectToPeer(string peerId)

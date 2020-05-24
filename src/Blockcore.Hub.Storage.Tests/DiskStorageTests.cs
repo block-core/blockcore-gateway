@@ -1,8 +1,11 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Blockcore.Hub.Networking;
 using Blockcore.Hub.Networking.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -122,6 +125,10 @@ namespace Blockcore.Hub.Storage.Tests
 
          Assert.Equal(persistedProfile.Signature, signature);
          Assert.Equal(persistedProfile.Data, data);
+
+         StorageDocumentInfo[] identities = storage.List("identity").ToArray();
+
+         Assert.Equal(4, identities.Length);
       }
    }
 }

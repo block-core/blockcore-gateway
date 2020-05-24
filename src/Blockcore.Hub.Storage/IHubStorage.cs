@@ -12,5 +12,7 @@ namespace Blockcore.Hub.Storage
       void Save(Document document);
 
       Document Load(string type, string id);
+
+      IEnumerable<StorageDocumentInfo> List(string type);
    }
 }
