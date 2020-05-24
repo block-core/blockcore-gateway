@@ -1,8 +1,10 @@
 using System;
 using System.Reflection;
 using Blockcore.Hub.Networking.Hubs;
+using Blockcore.Hub.Networking.Infrastructure;
 using Blockcore.Hub.Networking.Managers;
 using Blockcore.Hub.Networking.Services;
+using Blockcore.Hub.Storage;
 using Blockcore.Platform;
 using Blockcore.Platform.Networking;
 using Blockcore.Settings;
@@ -40,11 +42,16 @@ namespace Blockcore.Hub
          Assembly assembly = typeof(MessageSerializer).Assembly;
 
          services.AddSingleton<IHubMessageProcessing, HubMessageProcessing>();
+         services.AddSingleton<IHubStorage, DiskStorage>();
+
          services.AddSingleton<HubConnectionManager>();
          services.AddSingleton<HubManager>();
          services.AddSingleton<WebSocketHub>();
          services.AddSingleton<CommandDispatcher>();
          services.AddHostedService<HubService>();
+
+         // Register the DataProtection service, used to protect the auto-generated recovery phrase.
+         Protection.AddProtection(services);
 
          // Register all hub handlers.
          assembly.GetTypesImplementing<IHubMessageHandler>().ForEach((t) =>

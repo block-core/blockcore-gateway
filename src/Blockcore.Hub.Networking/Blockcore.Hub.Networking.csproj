@@ -1,20 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+   <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Blockcore.Core" Version="1.0.8" />
-    <PackageReference Include="MessagePack" Version="2.1.115" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
-    <PackageReference Include="PubSub" Version="4.0.1" />
-    <PackageReference Include="System.Management" Version="4.7.0" />
-     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.4" />
-  </ItemGroup>
+   <ItemGroup>
+      <PackageReference Include="Blockcore.Core" Version="1.0.8" />
+      <PackageReference Include="Blockcore.NBitcoin" Version="1.0.8" />
+      <PackageReference Include="MessagePack" Version="2.1.115" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="3.1.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
+      <PackageReference Include="PubSub" Version="4.0.1" />
+      <PackageReference Include="System.Management" Version="4.7.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.4" />
+      <PackageReference Include="Karambolo.Extensions.Logging.File" Version="3.1.1" />
+   </ItemGroup>
 
 </Project>

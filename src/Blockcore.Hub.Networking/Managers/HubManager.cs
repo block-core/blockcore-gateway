@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Blockcore.Hub.Networking.Hubs;
+using Blockcore.Hub.Networking.Infrastructure;
 using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking;
 using Blockcore.Platform.Networking.Entities;
@@ -18,6 +20,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NBitcoin;
+using Newtonsoft.Json;
 
 namespace Blockcore.Hub.Networking.Managers
 {
@@ -57,6 +61,15 @@ namespace Blockcore.Hub.Networking.Managers
       private bool _TCPListen = false;
 
       private readonly IHubContext<WebSocketHub> hubContext;
+
+
+      public List<string> TrustedHubs { get; }
+
+      public Dictionary<string, HubInfo> AvailableHubs { get; }
+
+      public Dictionary<string, HubInfo> ConnectedHubs { get; }
+
+      public Identity Identity { get; private set; }
 
       public bool TCPListen
       {
@@ -103,11 +116,57 @@ namespace Blockcore.Hub.Networking.Managers
          this.serviceProvider = serviceProvider;
 
          Connections = connectionManager;
+
+         TrustedHubs = new List<string>();
+         AvailableHubs = new Dictionary<string, HubInfo>();
+         ConnectedHubs = new Dictionary<string, HubInfo>();
+      }
+
+      public void Setup(Identity identity)
+      {
+         Identity = identity;
+
+         LocalHubInfo.Id = Identity.Id;
+
+         // Put the public key on the Id of the HubInfo instance.
+         //this.manager.LocalHubInfo.Id = Identity.Id;
       }
 
       public Task StartAsync(CancellationToken cancellationToken)
       {
          log.LogInformation($"Start Hub Service for {chainSettings.Symbol}.");
+
+         Protection protection = new Protection();
+         Mnemonic recoveryPhrase;
+         DirectoryInfo dataFolder = new DirectoryInfo(hubSettings.DataFolder);
+
+         if (!dataFolder.Exists)
+         {
+            dataFolder.Create();
+         }
+
+         string path = Path.Combine(dataFolder.FullName, "recoveryphrase.txt");
+
+         if (!File.Exists(path))
+         {
+            recoveryPhrase = new Mnemonic(Wordlist.English, WordCount.Twelve);
+            string cipher = protection.Protect(recoveryPhrase.ToString());
+            File.WriteAllText(path, cipher);
+         }
+         else
+         {
+            string cipher = File.ReadAllText(path);
+            recoveryPhrase = new Mnemonic(protection.Unprotect(cipher));
+         }
+
+         if (recoveryPhrase.ToString() != "border indicate crater public wealth luxury derive media barely survey rule hen")
+         {
+            //throw new ApplicationException("RECOVERY PHRASE IS DIFFERENT!");
+         }
+
+         // Read the identity from the secure storage and provide it here.
+         //host.Setup(new Identity(recoveryPhrase.ToString()), stoppingToken);
+
 
          IPAddress[] IPAddresses = Dns.GetHostAddresses(hubSettings.Server);
 
@@ -135,6 +194,7 @@ namespace Blockcore.Hub.Networking.Managers
 
          foreach (IPAddress IP in IPs)
          {
+            log.LogInformation("Internal Address: {IP}", IP);
             LocalHubInfo.InternalAddresses.Add(IP);
          }
 
@@ -177,6 +237,14 @@ namespace Blockcore.Hub.Networking.Managers
          {
             log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
 
+            log.LogInformation($"ConnectionRemovedEvent: {e.Data.Id}");
+
+            if (ConnectedHubs.ContainsKey(e.Data.Id))
+            {
+               ConnectedHubs.Remove(e.Data.Id);
+            }
+
+
             //var msg = new MessageModel
             //{
             //   Type = "ConnectionRemovedEvent",
@@ -184,6 +252,9 @@ namespace Blockcore.Hub.Networking.Managers
             //   Message = e.Data.ToString(),
             //   Data = e.Data
             //};
+
+
+
 
             hubContext.Clients.All.SendAsync("Event", e);
          });
@@ -272,6 +343,13 @@ namespace Blockcore.Hub.Networking.Managers
             //   Message = e.Data.ToString(),
             //   Data = e.Data
             //};
+
+            //if (e.Data.Id == Identity.Id)
+            //{
+            //   return;
+            //}
+
+            AvailableHubs.Add(e.Data.Id, new HubInfo(e.Data));
 
             hubContext.Clients.All.SendAsync("Event", e);
          });
@@ -449,7 +527,7 @@ namespace Blockcore.Hub.Networking.Managers
                while (TCPClientGateway.Connected)
                {
                   Thread.Sleep(5000);
-                  SendMessageTCP(new KeepAlive());
+                  SendMessageTCP(new KeepAlive(LocalHubInfo.Id));
                }
             }))
             {
@@ -574,6 +652,10 @@ namespace Blockcore.Hub.Networking.Managers
                      {
                         // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                         BaseMessage message = messageSerializer.Deserialize(receivedBytes);
+
+                        // Log all message as JSON output during development, simplifies debugging.
+                        log.LogInformation("TCP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+
                         messageProcessing.Process(message, ProtocolType.Udp, endpoint);
                      }
                   }
@@ -604,6 +686,9 @@ namespace Blockcore.Hub.Networking.Managers
                {
                   // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                   BaseMessage message = messageSerializer.Deserialize(TCPClientGateway.GetStream());
+
+                  // Log all message as JSON output during development, simplifies debugging.
+                  log.LogInformation("TCP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
 
                   //messageProcessing.Process(message, ProtocolType.Tcp, null, TCPClient);
                   messageProcessing.Process(message, ProtocolType.Tcp);
@@ -685,6 +770,7 @@ namespace Blockcore.Hub.Networking.Managers
                log.LogInformation("Sending Ack to " + endpoint.ToString() + ". Attempt " + i + " of 3");
 
                SendMessageUDP(new Ack(LocalHubInfo.Id), endpoint);
+
                Thread.Sleep(200);
 
                Ack response = AckResponces.FirstOrDefault(a => a.RecipientId == hubInfo.Id);
@@ -716,6 +802,7 @@ namespace Blockcore.Hub.Networking.Managers
                log.LogInformation("Sending Ack to " + hubInfo.ExternalEndpoint + ". Attempt " + i + " of 99");
 
                SendMessageUDP(new Ack(LocalHubInfo.Id), hubInfo.ExternalEndpoint);
+
                Thread.Sleep(300);
 
                Ack response = AckResponces.FirstOrDefault(a => a.RecipientId == hubInfo.Id);

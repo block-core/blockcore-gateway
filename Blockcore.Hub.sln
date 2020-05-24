@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub", "src\Blockc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Networking", "src\Blockcore.Hub.Networking\Blockcore.Hub.Networking.csproj", "{DFD1B229-2E23-4865-ABE7-095543254EF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Gateway", "src\Blockcore.Gateway\Blockcore.Gateway.csproj", "{92FAE865-9396-4BF0-A08D-46F4CA738C68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Gateway", "src\Blockcore.Gateway\Blockcore.Gateway.csproj", "{92FAE865-9396-4BF0-A08D-46F4CA738C68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Hub.Storage", "src\Blockcore.Hub.Storage\Blockcore.Hub.Storage.csproj", "{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Hub.Storage.Tests", "src\Blockcore.Hub.Storage.Tests\Blockcore.Hub.Storage.Tests.csproj", "{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{92FAE865-9396-4BF0-A08D-46F4CA738C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92FAE865-9396-4BF0-A08D-46F4CA738C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92FAE865-9396-4BF0-A08D-46F4CA738C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

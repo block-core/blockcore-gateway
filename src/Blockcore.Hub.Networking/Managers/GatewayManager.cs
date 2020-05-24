@@ -1,38 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Blockcore.Hub.Networking.Services;
 using Blockcore.Platform.Networking;
 using Blockcore.Platform.Networking.Entities;
 using Blockcore.Settings;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Blockcore.Platform.Networking.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Blockcore.Hub.Networking.Services;
-using Blockcore.Platform;
-using Blockcore.Platform.Networking;
-using Blockcore.Settings;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Blockcore.Hub.Networking.Managers;
+using Newtonsoft.Json;
 
 namespace Blockcore.Hub.Networking.Managers
 {
@@ -287,6 +266,9 @@ namespace Blockcore.Hub.Networking.Managers
                         // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                         Platform.Networking.Messages.BaseMessage message = messageSerializer.Deserialize(client.GetStream());
 
+                        // Log all message as JSON output during development, simplifies debugging.
+                        log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+
                         messageProcessing.Process(message, ProtocolType.Tcp, null, client);
                      }
                      catch (Exception ex)
@@ -326,6 +308,10 @@ namespace Blockcore.Hub.Networking.Managers
                {
                   // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                   Platform.Networking.Messages.BaseMessage message = messageSerializer.Deserialize(receivedBytes);
+
+                  // Log all message as JSON output during development, simplifies debugging.
+                  log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+
                   messageProcessing.Process(message, ProtocolType.Udp, udpEndpoint);
                }
             }

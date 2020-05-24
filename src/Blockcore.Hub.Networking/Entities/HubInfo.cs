@@ -143,7 +143,6 @@ namespace Blockcore.Platform.Networking.Entities
          msg.Id = Id;
          msg.ExternalEndpoint = ExternalEndpoint;
          msg.InternalEndpoint = InternalEndpoint;
-         msg.FirstName = "SONDRE!!!";
 
          return msg;
       }
@@ -158,7 +157,6 @@ namespace Blockcore.Platform.Networking.Entities
          msg.InternalEndpoint = InternalEndpoint?.ToString();
          msg.ConnectionType = ConnectionType.ToString();
          msg.InternalAddresses = InternalAddresses.Select(a => a.ToString()).ToList();
-         msg.FirstName = "SONDRE!";
 
          return msg;
       }

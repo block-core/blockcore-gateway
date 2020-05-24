@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blockcore.Gateway\Blockcore.Gateway.csproj" />
     <ProjectReference Include="..\Blockcore.Hub.Networking\Blockcore.Hub.Networking.csproj" />
+    <ProjectReference Include="..\Blockcore.Hub\Blockcore.Hub.csproj" />
   </ItemGroup>
 
 </Project>

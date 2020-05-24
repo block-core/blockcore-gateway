@@ -5,5 +5,7 @@ namespace Blockcore.Settings
       public int Port { get; set; } = 15050;
 
       public string Server { get; set; }
+
+      public string DataFolder { get; set; }
    }
 }
