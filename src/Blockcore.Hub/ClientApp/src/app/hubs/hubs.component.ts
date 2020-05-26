@@ -3,6 +3,7 @@ import { ApiService } from '../services/api.service';
 import { SetupService } from '../services/setup.service';
 import { Message, HubService } from '../services/hub.service';
 import { PeerService } from '../services/peer.service';
+import { ApplicationState } from '../services/applicationstate.service';
 
 @Component({
   selector: 'app-hubs-component',
@@ -33,6 +34,7 @@ export class HubsComponent implements OnInit, OnDestroy {
   // message = new Message();
 
   constructor(
+    public appState: ApplicationState,
     public peerService: PeerService,
     private chatService: HubService,
     private ngZone: NgZone,
@@ -42,6 +44,8 @@ export class HubsComponent implements OnInit, OnDestroy {
     //   await this.updateInfo();
     //   await this.updateBlocks();
     // });
+
+    appState.title = 'Hubs';
 
     this.subscribeToEvents();
   }

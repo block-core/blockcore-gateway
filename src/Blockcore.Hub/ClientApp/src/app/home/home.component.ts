@@ -10,9 +10,14 @@ export class HomeComponent {
   @HostBinding('class.content-centered') hostClass = true;
 
   constructor(public setup: SetupService, private router: Router) {
-    // When we are not in multichain mode, redirect to chain-home.
-    if (!setup.multiChain) {
-      router.navigate(['/' + setup.current.toLowerCase()]);
-    }
+    router.navigateByUrl('/setup');
+    // if (!setup.setupComplete) {
+    //   router.navigate(['/setup']);
+    // } else {
+    //   // When we are not in multichain mode, redirect to chain-home.
+    //   if (!setup.multiChain) {
+    //     router.navigate(['/' + setup.current.toLowerCase()]);
+    //   }
+    // }
   }
 }

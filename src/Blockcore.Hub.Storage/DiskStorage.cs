@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Blockcore.Configuration;
 using Blockcore.Settings;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Blockcore.Hub.Storage
@@ -44,10 +45,10 @@ namespace Blockcore.Hub.Storage
       private readonly HubSettings settings;
       private readonly DirectoryInfo dataFolder;
 
-      public DiskStorage(HubSettings settings)
+      public DiskStorage(IOptions<HubSettings> settings)
       {
-         this.settings = settings;
-         dataFolder = new DirectoryInfo(settings.DataFolder);
+         this.settings = settings.Value;
+         dataFolder = new DirectoryInfo(this.settings.DataFolder);
       }
 
       public async Task StartAsync()

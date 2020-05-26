@@ -644,6 +644,20 @@ footer {
   color: var(--foreground-alternative);
 }
 
+.input-button {
+  font-size: 5em;
+  padding: 1em;
+  border: 4px solid gray;
+  background-color: pink;
+}
+
+.input-button:hover {
+  font-size: 5em;
+  padding: 1em;
+  border: 4px solid gray;
+  
+}
+
 .grid,
 .grid-header {
   display: grid;

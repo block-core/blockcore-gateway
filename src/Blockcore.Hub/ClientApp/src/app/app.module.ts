@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
@@ -27,10 +27,68 @@ import { ErrorComponent } from './error/error.component';
 import { YesPipe } from './shared/yes.pipe';
 import { AddressComponent } from './explorer/address/address.component';
 import { HubsComponent } from './hubs/hubs.component';
+import { SetupComponent } from './setup/setup.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IdentityComponent } from './identity/identity.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { GatewayComponent } from './gateway/gateway.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatBadgeModule } from '@angular/material/badge';
+import { AppsComponent } from './apps/apps.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RequestsComponent } from './requests/requests.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routes: Routes = [
   {
     path: '', component: HomeComponent, pathMatch: 'full', resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'setup', component: SetupComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'dashboard', component: DashboardComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'apps', component: AppsComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'gateway', component: GatewayComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'hubs', component: HubsComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'requests', component: RequestsComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'identity', component: IdentityComponent, resolve: {
       chain: LoadingResolverService
     }
   },
@@ -83,7 +141,7 @@ const routes: Routes = [
     path: ':chain/about', component: AboutComponent, resolve: {
       chain: LoadingResolverService
     }
-  },
+  }
 ];
 
 @NgModule({
@@ -110,7 +168,13 @@ const routes: Routes = [
     ErrorComponent,
     YesPipe,
     AddressComponent,
-    HubsComponent
+    HubsComponent,
+    SetupComponent,
+    IdentityComponent,
+    DashboardComponent,
+    GatewayComponent,
+    AppsComponent,
+    RequestsComponent
   ],
   imports: [
     BrowserModule,
@@ -119,7 +183,25 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forRoot(routes, {
       // onSameUrlNavigation: 'reload'
-    })
+    }),
+    BrowserAnimationsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatTreeModule,
+    MatBadgeModule,
+    MatTabsModule,
+    MatTooltipModule,
   ],
   exports: [
     ScrollDirective,

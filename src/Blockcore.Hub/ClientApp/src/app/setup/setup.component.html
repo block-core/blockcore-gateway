@@ -1,0 +1,42 @@
+<h1>Setup your Blockcore Hub</h1>
+
+<p>
+  Hi and welcome to your Blockcore Hub. There are a few configuration options you must decide before we can continue.
+</p>
+
+<a [routerLink]="['/dashboard']">Dashboard</a>
+<a [routerLink]="['/dashboard2']">Dashboard 2</a>
+<a [routerLink]="['/gateway']">Gateway</a>
+<a [routerLink]="['/identity']">Identity</a>
+
+<h2>Supported Chains:</h2>
+
+<div class="chains-home">
+  <ul>
+    <li class="chain-home-item" *ngFor="let chain of setup.chains">
+
+      <input [id]="'chain' + chain.name" type="checkbox">
+      <label [for]="'chain' + chain.name">
+        <img [ngClass]="{'mode-aware': chain.filter}" [src]="chain.icon">
+        {{chain.name}}
+      </label>
+    </li>
+  </ul>
+</div>
+
+<h2>Recovery Phrase:</h2>
+
+<i class="fas fa-key input-icon"></i>
+<input class="input-search box" type="search" [(ngModel)]="recoveryPhrase" placeholder="Recovery Phrase">
+
+<h2>Gateway:</h2>
+
+<i class="fas fa-link input-icon"></i>
+<input class="input-search box" type="search" [(ngModel)]="gateway" placeholder="Gateway">
+
+<button class="input-button">
+  
+  <!-- <i class="fas fa-save"></i> -->
+  <i class="fas fa-cog fa-spin"></i>
+
+   Save</button>
