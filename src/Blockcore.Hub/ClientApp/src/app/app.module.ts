@@ -50,6 +50,8 @@ import { AppsComponent } from './apps/apps.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RequestsComponent } from './requests/requests.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MessagesComponent } from './messages/messages.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 const routes: Routes = [
   {
@@ -84,6 +86,11 @@ const routes: Routes = [
   },
   {
     path: 'requests', component: RequestsComponent, resolve: {
+      chain: LoadingResolverService
+    }
+  },
+  {
+    path: 'messages', component: MessagesComponent, resolve: {
       chain: LoadingResolverService
     }
   },
@@ -174,7 +181,8 @@ const routes: Routes = [
     DashboardComponent,
     GatewayComponent,
     AppsComponent,
-    RequestsComponent
+    RequestsComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -202,6 +210,7 @@ const routes: Routes = [
     MatBadgeModule,
     MatTabsModule,
     MatTooltipModule,
+    MatExpansionModule,
   ],
   exports: [
     ScrollDirective,

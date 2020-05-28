@@ -18,6 +18,7 @@
 
 .logo-icon {
    justify-content: center;
+   cursor: pointer;
 }
 
 .logo-icon img {
@@ -30,19 +31,49 @@
 
 .example-icon {
    padding: 0 14px;
- }
- 
- .example-spacer {
-   flex: 1 1 auto;
- }
+}
 
- .active-link {
-    border-left: 4px solid #c2185b !important;
-    box-sizing: border-box;
- }
+.example-spacer {
+   flex: 1 1 auto;
+}
+
+.active-link {
+   border-left: 4px solid #c2185b !important;
+   box-sizing: border-box;
+}
 
 .menu-options a {
    border-left: 4px solid transparent;
    box-sizing: border-box;
 }
- 
+
+.welcome-text {
+   margin-left: 10%;
+   padding-top: 70%;
+   color: white;
+}
+
+.welcome-font-black {
+   font-size: 6em;
+   font-weight: 900;
+   margin-bottom: 0.2em;
+}
+
+.welcome-font-light {
+   font-weight: 300;
+}
+
+@media only screen and (max-width: 60em) {
+   .welcome-font-black {
+      font-size: 3em;
+   }
+
+   .welcome-font-light {
+      font-size: 5em;
+   }
+
+   .welcome-text {
+      margin-left: 5%;
+      padding-top: 90%;
+   }
+}

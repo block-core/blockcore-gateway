@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ApplicationState } from '../services/applicationstate.service';
 
 @Component({
   selector: 'app-identity',
@@ -85,7 +86,9 @@ export class IdentityComponent {
     {name: 'Wyoming', abbreviation: 'WY'}
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private appState: ApplicationState) {
+    appState.title = 'Identity';
+  }
 
   onSubmit() {
     alert('Thanks!');

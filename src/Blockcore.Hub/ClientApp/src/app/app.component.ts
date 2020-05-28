@@ -7,14 +7,29 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ApplicationState } from './services/applicationstate.service';
+import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation, flipInYOnEnterAnimation, flipOutYOnLeaveAnimation, fadeInUpAnimation, fadeOutDownAnimation, fadeInUpOnEnterAnimation, fadeOutDownOnLeaveAnimation, zoomOutOnLeaveAnimation } from 'angular-animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    fadeInOnEnterAnimation({ anchor: 'enter'}),
+    fadeOutOnLeaveAnimation({ anchor: 'leave', duration: 250 }),
+    flipInYOnEnterAnimation(),
+    flipOutYOnLeaveAnimation(),
+    fadeInUpOnEnterAnimation(),
+    fadeOutDownOnLeaveAnimation(),
+    zoomOutOnLeaveAnimation()
+    // fadeInUpOnEnterAnimation({ anchor: 'enter', duration: 1000, delay: 100, translate: '30px' }),
+    // bounceOutDownOnLeaveAnimation({ anchor: 'leave', duration: 500, delay: 200, translate: '40px' })
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'app';
+  welcomeLoaded = false;
+  welcomeLoadedSecond = false;
+  welcomeVisible = true;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -29,6 +44,19 @@ export class AppComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private breakpointObserver: BreakpointObserver) {
+
+      setTimeout(() => {
+        this.welcomeLoaded = true;
+      }, 2400);
+
+      setTimeout(() => {
+        this.welcomeLoadedSecond = true;
+      }, 2700);
+
+      setTimeout(() => {
+        this.welcomeVisible = false;
+      }, 4000);
+
     // Initial loading.
     this.setup.getChains();
 
