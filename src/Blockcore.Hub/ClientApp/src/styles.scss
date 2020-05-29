@@ -1,7 +1,6 @@
 /*@import 'styles/blockcore', 'styles/explorer';*/
 
-html
-{
+html {
   text-size-adjust: 100%;
 }
 
@@ -36,7 +35,6 @@ body {
 }
 
 .menu-mode-backdrop {
-  //  border: 4px solid red;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
 }
@@ -47,6 +45,15 @@ body {
   }
   to {
     backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes animatedBackground {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
   }
 }
 
@@ -65,14 +72,9 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-
-
   background-color: rgba(0, 0, 0, 0.5);
-  //backdrop-filter: blur(2px);
   transition: all 1.2s;
-
   animation: animatedBlur 2s normal forwards;
-
 }
 
 .welcome-text {
@@ -88,16 +90,6 @@ body {
   bottom: 0;
   right: 0;
   overflow: hidden;
-
-  //  background: url('/assets/wallpaper-01.jpg') no-repeat center center fixed;
-  //  -webkit-background-size: cover;
-  //  -moz-background-size: cover;
-  //  -o-background-size: cover;
-  //  background-size: cover;
-
-  //  background-position: 0px 0px;
-  //  background-repeat: repeat-x;
-  //  animation: animatedBackground 2s linear;
 }
 
 .welcome:hover .welcome-content,
@@ -130,15 +122,6 @@ body {
   animation: animatedBackground 2s normal forwards;
 }
 
-@keyframes animatedBackground {
-  from {
-    transform: scale(1.2);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
 .welcome-content::before {
   content: "";
   display: none;
@@ -147,12 +130,49 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  //background-color: rgba(52, 73, 94, 0.75);
 }
 
 .welcome:hover .welcome-content:before,
 .welcome:focus .welcome-content:before {
   display: block;
+}
+
+.welcome-text {
+  height: 100%;
+  margin-left: 10%;
+  color: white;
+  position: absolute;
+  top: 70%;
+}
+
+.welcome-font-black {
+  font-weight: 900 !important;
+  margin-bottom: 0.2em !important;
+}
+
+.welcome-font-light {
+  font-weight: 300;
+}
+
+@media only screen and (max-width: 60em) {
+  .welcome-font-black {
+    font-size: 2.4em !important;
+    margin-bottom: 0.05em !important;
+  }
+
+  .welcome-font-light {
+    font-size: 4.5em !important;
+  }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 .backdrop {
@@ -164,27 +184,13 @@ body {
   transform: scale(1.2);
 }
 
-body {
-  overflow: hidden;
-  //  background: url('/assets/wallpaper-01.jpg') no-repeat center center fixed;
-  //  -webkit-background-size: cover;
-  //  -moz-background-size: cover;
-  //  -o-background-size: cover;
-  //  background-size: cover;
-}
-
 .loading-text {
   font-size: 2em;
   text-align: center;
   padding-top: 4em;
 }
 
-
 @media only screen and (max-width: 120em) {
-  body {
-    //font-size: 18px;
-  }
-
   .loading-text {
     font-size: 1em;
     padding-top: 3em;

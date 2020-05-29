@@ -10,11 +10,11 @@
 
 <!-- <div id="welcome" class="welcome" *ngIf="welcomeVisible" [@zoomOutOnLeave] [@fadeOutLeftBigOnLeave]></div> -->
 
-<div id="welcome" class="welcome" *ngIf="welcomeVisible" [@fadeOutLeftBigOnLeave]>
+<div id="welcome" class="welcome noselect" *ngIf="welcomeVisible" [@fadeOutLeftBigOnLeave]>
   <div class="welcome-content">
 
     <div class="welcome-text">
-      <h3 class="welcome-font-black" *ngIf="welcomeLoaded" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>Welcome back</h3>
+      <h3 class="mat-display-2 welcome-font-black" *ngIf="welcomeLoaded" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>Welcome back</h3>
       <h4 class="mat-display-4 welcome-font-light" *ngIf="welcomeLoadedSecond" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>
         Sondre</h4>
     </div>

@@ -46,34 +46,3 @@
    border-left: 4px solid transparent;
    box-sizing: border-box;
 }
-
-.welcome-text {
-   margin-left: 10%;
-   padding-top: 70%;
-   color: white;
-}
-
-.welcome-font-black {
-   font-size: 6em;
-   font-weight: 900;
-   margin-bottom: 0.2em;
-}
-
-.welcome-font-light {
-   font-weight: 300;
-}
-
-@media only screen and (max-width: 60em) {
-   .welcome-font-black {
-      font-size: 3em;
-   }
-
-   .welcome-font-light {
-      font-size: 5em;
-   }
-
-   .welcome-text {
-      margin-left: 5%;
-      padding-top: 90%;
-   }
-}
