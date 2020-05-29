@@ -6,11 +6,15 @@ using System.Linq;
 using Blockcore.Hub.Networking;
 using Blockcore.Hub.Networking.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Blockcore.Hub.Storage.Tests
 {
@@ -34,6 +38,11 @@ namespace Blockcore.Hub.Storage.Tests
       [Fact]
       public void CreateAndVerifyStorage()
       {
+         IHost host = Blockcore.Hub.Program.CreateHostBuilder(new string[] { }).Build();
+         IHubStorage storage = host.Services.GetService<IHubStorage>();
+         IOptions<Settings.HubSettings> options = host.Services.GetService<IOptions<Settings.HubSettings>>();
+         Settings.HubSettings settings = options.Value;
+
          JsonConvert.DefaultSettings = () =>
          {
             var settings = new JsonSerializerSettings();
@@ -42,8 +51,6 @@ namespace Blockcore.Hub.Storage.Tests
             return settings;
          };
 
-         Settings.HubSettings settings = new Settings.HubSettings { DataFolder = "datafolder" };
-         IHubStorage storage = new DiskStorage(settings);
          storage.StartAsync().Wait();
 
          Protection protection = new Protection();

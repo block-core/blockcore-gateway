@@ -7,7 +7,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ApplicationState } from './services/applicationstate.service';
-import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation, flipInYOnEnterAnimation, flipOutYOnLeaveAnimation, fadeInUpAnimation, fadeOutDownAnimation, fadeInUpOnEnterAnimation, fadeOutDownOnLeaveAnimation, zoomOutOnLeaveAnimation } from 'angular-animations';
+import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation, flipInYOnEnterAnimation, flipOutYOnLeaveAnimation, fadeInUpAnimation, fadeOutDownAnimation, fadeInUpOnEnterAnimation, fadeOutDownOnLeaveAnimation, zoomOutOnLeaveAnimation, fadeOutLeftOnLeaveAnimation, fadeOutLeftBigOnLeaveAnimation, bounceOutLeftOnLeaveAnimation, fadeInDownOnEnterAnimation, fadeOutUpOnLeaveAnimation } from 'angular-animations';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,11 @@ import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation, flipInYOnEnterAnimatio
     flipOutYOnLeaveAnimation(),
     fadeInUpOnEnterAnimation(),
     fadeOutDownOnLeaveAnimation(),
-    zoomOutOnLeaveAnimation()
+    zoomOutOnLeaveAnimation(),
+    fadeOutLeftBigOnLeaveAnimation(),
+    bounceOutLeftOnLeaveAnimation(),
+    fadeInDownOnEnterAnimation(),
+    fadeOutUpOnLeaveAnimation()
     // fadeInUpOnEnterAnimation({ anchor: 'enter', duration: 1000, delay: 100, translate: '30px' }),
     // bounceOutDownOnLeaveAnimation({ anchor: 'leave', duration: 500, delay: 200, translate: '40px' })
   ]
@@ -30,6 +34,7 @@ export class AppComponent implements OnInit {
   welcomeLoaded = false;
   welcomeLoadedSecond = false;
   welcomeVisible = true;
+  welcomeLogo = true;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -46,6 +51,10 @@ export class AppComponent implements OnInit {
     private breakpointObserver: BreakpointObserver) {
 
       setTimeout(() => {
+        this.welcomeLogo = true;
+      }, 1400);
+
+      setTimeout(() => {
         this.welcomeLoaded = true;
       }, 2400);
 
@@ -55,7 +64,7 @@ export class AppComponent implements OnInit {
 
       setTimeout(() => {
         this.welcomeVisible = false;
-      }, 4000);
+      }, 5000);
 
     // Initial loading.
     this.setup.getChains();

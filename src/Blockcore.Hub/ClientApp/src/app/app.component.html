@@ -8,12 +8,18 @@
 <app-footer class="app-footer margin"></app-footer>
 <div class="app-footer-background"></div> -->
 
-<div id="welcome" class="welcome" *ngIf="welcomeVisible" [@zoomOutOnLeave]>
+<!-- <div id="welcome" class="welcome" *ngIf="welcomeVisible" [@zoomOutOnLeave] [@fadeOutLeftBigOnLeave]></div> -->
+
+<div id="welcome" class="welcome" *ngIf="welcomeVisible" [@fadeOutLeftBigOnLeave]>
   <div class="welcome-content">
+
     <div class="welcome-text">
       <h3 class="welcome-font-black" *ngIf="welcomeLoaded" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>Welcome back</h3>
-      <h4 class="mat-display-4 welcome-font-light" *ngIf="welcomeLoadedSecond" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>Sondre</h4>
+      <h4 class="mat-display-4 welcome-font-light" *ngIf="welcomeLoadedSecond" [@fadeInUpOnEnter] [@fadeOutDownOnLeave]>
+        Sondre</h4>
     </div>
+    <img class="welcome-logo" src="assets/blockcore-light-256x256.png" *ngIf="welcomeLogo" [@fadeInDownOnEnter] [@fadeOutUpOnLeave]>
+    <div class="welcome-backdrop"></div>
   </div>
 </div>
 

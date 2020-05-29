@@ -20,6 +20,7 @@
 
    <ItemGroup>
      <ProjectReference Include="..\Blockcore.Hub.Storage\Blockcore.Hub.Storage.csproj" />
+     <ProjectReference Include="..\Blockcore.Hub\Blockcore.Hub.csproj" />
    </ItemGroup>
 
 </Project>

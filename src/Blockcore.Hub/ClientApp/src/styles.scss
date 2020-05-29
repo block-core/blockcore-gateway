@@ -41,6 +41,45 @@ body {
   backdrop-filter: blur(2px);
 }
 
+@keyframes animatedBlur {
+  from {
+    backdrop-filter: blur(6px);
+  }
+  to {
+    backdrop-filter: blur(0px);
+  }
+}
+
+.welcome-logo {
+  position: absolute;
+  z-index: 50002;
+  top: 10%;
+  width: 128px;
+  left: 10%;
+}
+
+.welcome-backdrop {
+  position: absolute;
+  z-index: 50001;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+
+  background-color: rgba(0, 0, 0, 0.5);
+  //backdrop-filter: blur(2px);
+  transition: all 1.2s;
+
+  animation: animatedBlur 2s normal forwards;
+
+}
+
+.welcome-text {
+  position: absolute;
+  z-index: 50002;
+}
+
 .welcome {
   position: absolute;
   z-index: 50000;
