@@ -163,14 +163,10 @@
          </mat-expansion-panel>
        </mat-accordion>
 
-      
-
-    
-
    </mat-sidenav>
 
    <div class="message-log">
-      <div class="message message-left">
+      <!-- <div class="message message-left">
          <span class="message-time">2020-05-20 13:05</span>
          How are you doing?
       </div>
@@ -187,7 +183,6 @@
          
          <mat-card class="money-card">
             <mat-card-header>
-               <!-- <div mat-card-avatar class="request-header-image"></div> -->
                <mat-icon mat-card-avatar class="card-avatar-icon">attach_money</mat-icon>
                <mat-card-title>2.12305 BTC</mat-card-title>
                <mat-card-subtitle>Payment</mat-card-subtitle>
@@ -200,8 +195,6 @@
    
             </mat-card-content>
             <mat-card-actions>
-               <!-- <button mat-flat-button color="primary">Block</button>&nbsp;
-               <button mat-flat-button color="accent">Reject</button>&nbsp; -->
                <button mat-stroked-button>View details</button>
             </mat-card-actions>
          </mat-card>
@@ -211,13 +204,18 @@
       <div class="message message-left">
          <span class="message-time">2020-05-20 16:59</span>
          Wow, thank you! Now I can finally buy myself a new t-shirt!
+      </div> -->
+      
+      <div *ngFor="let msg of messages" class="message" [ngClass]="{'message-right': msg.self, 'message-left': !msg.self}" >
+         <span class="message-time">{{msg.date}}</span>
+         {{msg.message}}
       </div>
 
    </div>
 
    <mat-form-field class="message-input-full-width">
-      <input matInput type="search" placeholder="Type your message">
+      <input matInput type="search" [(ngModel)]="message" placeholder="Type your message">
    </mat-form-field>
-
+   <button mat-button (click)=sendMessage()>Send</button>
 
 </mat-sidenav-container>

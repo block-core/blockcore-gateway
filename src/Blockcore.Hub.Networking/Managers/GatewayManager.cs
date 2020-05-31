@@ -266,8 +266,12 @@ namespace Blockcore.Hub.Networking.Managers
                         // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                         Platform.Networking.Messages.BaseMessage message = messageSerializer.Deserialize(client.GetStream());
 
-                        // Log all message as JSON output during development, simplifies debugging.
-                        log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+                        // Don't log KeepAlive messages.
+                        if (message.Command != 3)
+                        {
+                           // Log all message as JSON output during development, simplifies debugging.
+                           log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+                        }
 
                         messageProcessing.Process(message, ProtocolType.Tcp, null, client);
                      }
@@ -309,8 +313,12 @@ namespace Blockcore.Hub.Networking.Managers
                   // Retrieve the message from the network stream. This will handle everything from message headers, body and type parsing.
                   Platform.Networking.Messages.BaseMessage message = messageSerializer.Deserialize(receivedBytes);
 
-                  // Log all message as JSON output during development, simplifies debugging.
-                  log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+                  // Don't log KeepAlive messages.
+                  if (message.Command != 3)
+                  {
+                     // Log all message as JSON output during development, simplifies debugging.
+                     log.LogInformation("UDP:" + System.Environment.NewLine + JsonConvert.SerializeObject(message));
+                  }
 
                   messageProcessing.Process(message, ProtocolType.Udp, udpEndpoint);
                }

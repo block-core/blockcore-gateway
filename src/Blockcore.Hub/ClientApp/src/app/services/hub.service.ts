@@ -20,7 +20,7 @@ export class Message {
 
    clientuniqueid: string;
    type: string;
-   message: string;
+   content: string;
    date: Date;
 
    constructor() {
@@ -46,6 +46,10 @@ export class HubService {
 
    sendMessage(message: Message) {
       this._hubConnection.invoke('Broadcast', message);
+   }
+
+   sendMessageToHubs(message: Message) {
+      this._hubConnection.invoke('BroadcastToHubs', message);
    }
 
    connectToPeer(id: number) {

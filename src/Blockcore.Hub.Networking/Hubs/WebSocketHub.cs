@@ -20,6 +20,8 @@ using Blockcore.Platform.Networking.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Blockcore.Hub.Networking.Services;
 using NBitcoin;
+using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.VisualBasic;
 
 namespace Blockcore.Hub.Networking.Hubs
 {
@@ -74,9 +76,53 @@ namespace Blockcore.Hub.Networking.Hubs
       /// <returns>Returns the same message supplied.</returns>
       public void Broadcast(MessageModel message)
       {
-         var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message, RecipientId = 1 };
+         List<HubInfo> allConnections = hubManager.Connections.GetBroadcastConnections(false);
 
-         hubManager.SendMessageTCP(msg);
+         foreach (HubInfo conn in allConnections)
+         {
+            // Skip self.
+            if (conn.Id == hubManager.LocalHubInfo.Id)
+            {
+               continue;
+            }
+
+            var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message };
+            msg.From = hubManager.LocalHubInfo.Id;
+            msg.To = conn.Id;
+            msg.RecipientId = conn.Id;
+
+            hubManager.SendMessageTCP(msg);
+         }
+
+         //return Clients.Caller.SendAsync("Message", message);
+      }
+
+      /// <summary>
+      /// Basic echo method that can be used to verify connection.
+      /// </summary>
+      /// <param name="message">Any message to echo back.</param>
+      /// <returns>Returns the same message supplied.</returns>
+      public void BroadcastToHubs(MessageModel message)
+      {
+         List<HubInfo> allConnections = hubManager.Connections.GetBroadcastConnections(false);
+
+         foreach (HubInfo conn in allConnections)
+         {
+            // Skip self.
+            if (conn.Id == hubManager.LocalHubInfo.Id)
+            {
+               continue;
+            }
+
+            var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message };
+            msg.From = hubManager.LocalHubInfo.Id;
+            msg.To = conn.Id;
+            msg.RecipientId = conn.Id;
+
+            // Send the message only directly to the Hub.
+            hubManager.SendMessageUDP(msg, conn.ExternalEndpoint);
+         }
+
          //return Clients.Caller.SendAsync("Message", message);
       }
 

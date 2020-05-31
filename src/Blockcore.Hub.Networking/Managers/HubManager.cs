@@ -302,6 +302,13 @@ namespace Blockcore.Hub.Networking.Managers
             //};
 
             hubContext.Clients.All.SendAsync("Event", e);
+
+            // Automatically connect to discovered hubs.
+            if (LocalHubInfo.Id != e.Data.Id)
+            {
+               ConnectToClient(e.Data);
+            }
+            
          });
 
          hub.Subscribe<GatewayConnectedEvent>(this, e =>
@@ -599,9 +606,17 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void SendMessageTCP(IBaseEntity entity)
       {
+         BaseMessage msg = entity.ToMessage();
+        
+         // Don't log KeepAlive messages.
+         if (msg.Command != 3)
+         {
+            log.LogInformation("Send TCP: " + JsonConvert.SerializeObject(msg));
+         }
+
          if (TCPClientGateway != null && TCPClientGateway.Connected)
          {
-            byte[] data = messageSerializer.Serialize(entity.ToMessage());
+            byte[] data = messageSerializer.Serialize(msg);
 
             try
             {
@@ -617,9 +632,17 @@ namespace Blockcore.Hub.Networking.Managers
 
       public void SendMessageUDP(IBaseEntity entity, IPEndPoint endpoint)
       {
+         BaseMessage msg = entity.ToMessage();
+
+         // Don't log KeepAlive messages.
+         if (msg.Command != 3)
+         {
+            log.LogInformation("Send UDP: " + JsonConvert.SerializeObject(msg));
+         }
+
          entity.Id = LocalHubInfo.Id;
 
-         byte[] data = messageSerializer.Serialize(entity.ToMessage());
+         byte[] data = messageSerializer.Serialize(msg);
 
          try
          {
