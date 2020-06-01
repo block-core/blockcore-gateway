@@ -35,10 +35,10 @@ namespace Blockcore.Platform.Networking.Handlers.GatewayHandlers
             foreach (Entities.HubInfo connection in connections)
             {
                // Make sure we don't broadcast back to source.
-               if (connection.Id == msg.From)
-               {
-                  continue;
-               }
+               //if (connection.Id == msg.From)
+               //{
+               //   continue;
+               //}
 
                // Should we only send TCP, and not UDP? Should we check if either is available?
                connectionManager.SendTCP(new Broadcast(msg), connection.Client);

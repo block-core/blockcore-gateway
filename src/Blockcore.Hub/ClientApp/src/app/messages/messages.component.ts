@@ -15,7 +15,7 @@ export class MessagesComponent {
   messages = [];
 
   broadcastToHubs() {
-    const msg = { self: true, from: 'me', content: this.message};
+    const msg = { self: true, date: new Date(), from: 'me', content: this.message};
 
     console.log('Msg:', msg);
 
@@ -26,7 +26,7 @@ export class MessagesComponent {
   }
 
   broadcastToHubsRelayed() {
-    const msg = { self: true, from: 'me', content: this.message};
+    const msg = { self: true, date: new Date(), from: 'me', content: this.message};
 
     console.log('Msg:', msg);
 
@@ -37,7 +37,7 @@ export class MessagesComponent {
   }
 
   broadcastToGateways() {
-    const msg = { self: true, from: 'me', content: this.message};
+    const msg = { self: true, date: new Date(), from: 'me', content: this.message};
 
     console.log('Msg:', msg);
 

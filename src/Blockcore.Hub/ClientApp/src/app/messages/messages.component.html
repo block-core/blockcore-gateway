@@ -208,7 +208,7 @@
       
       <div *ngFor="let msg of messages" class="message" [ngClass]="{'message-right': msg.self, 'message-left': !msg.self}" >
          <span class="message-time">{{msg.date}}</span>
-         {{msg.message}}
+         {{msg.content}}
       </div>
 
    </div>
