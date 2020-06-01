@@ -22,14 +22,21 @@ using Blockcore.Hub.Networking.Services;
 using NBitcoin;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.VisualBasic;
+using Blockcore.Hub.Networking.Messages;
 
 namespace Blockcore.Hub.Networking.Hubs
 {
    public class MessageModel
    {
-      public string PublicKey { get; set; }
+      // public string PublicKey { get; set; }
 
-      public string Message { get; set; }
+      public string From { get; set; }
+
+      public string Content { get; set; }
+
+      //public DateTime Date { get; set; }
+
+      //public string Type { get; set; }
    }
 
    public class WebSocketHub : Microsoft.AspNetCore.SignalR.Hub
@@ -70,38 +77,8 @@ namespace Blockcore.Hub.Networking.Hubs
       }
 
       /// <summary>
-      /// Basic echo method that can be used to verify connection.
+      /// Sends a broadcast message to directly connected hubs.
       /// </summary>
-      /// <param name="message">Any message to echo back.</param>
-      /// <returns>Returns the same message supplied.</returns>
-      public void Broadcast(MessageModel message)
-      {
-         List<HubInfo> allConnections = hubManager.Connections.GetBroadcastConnections(false);
-
-         foreach (HubInfo conn in allConnections)
-         {
-            // Skip self.
-            if (conn.Id == hubManager.LocalHubInfo.Id)
-            {
-               continue;
-            }
-
-            var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message };
-            msg.From = hubManager.LocalHubInfo.Id;
-            msg.To = conn.Id;
-            msg.RecipientId = conn.Id;
-
-            hubManager.SendMessageTCP(msg);
-         }
-
-         //return Clients.Caller.SendAsync("Message", message);
-      }
-
-      /// <summary>
-      /// Basic echo method that can be used to verify connection.
-      /// </summary>
-      /// <param name="message">Any message to echo back.</param>
-      /// <returns>Returns the same message supplied.</returns>
       public void BroadcastToHubs(MessageModel message)
       {
          List<HubInfo> allConnections = hubManager.Connections.GetBroadcastConnections(false);
@@ -114,17 +91,59 @@ namespace Blockcore.Hub.Networking.Hubs
                continue;
             }
 
-            var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message };
+            var msg = new Message { From = message.From, To = conn.Id, Content = message.Content };
             msg.From = hubManager.LocalHubInfo.Id;
             msg.To = conn.Id;
             msg.RecipientId = conn.Id;
 
             // Send the message only directly to the Hub.
-            hubManager.SendMessageUDP(msg, conn.ExternalEndpoint);
+            //hubManager.SendMessageTCP(msg, conn.ExternalEndpoint);
          }
-
-         //return Clients.Caller.SendAsync("Message", message);
       }
+
+      /// <summary>
+      /// Sends a broadcast message to all hubs connected to the gateways.
+      /// </summary>
+      public void BroadcastToHubsRelayed(MessageModel message)
+      {
+         hubManager.SendMessageTCP(new Broadcast { To = "HUB", From = hubManager.LocalHubInfo.Id, Command = MessageTypes.BROADCAST, Id = hubManager.LocalHubInfo.Id, Content = message.Content });
+      }
+
+      /// <summary>
+      /// Sends a broadcast message to connected gateways.
+      /// </summary>
+      public void BroadcastToGateways(MessageModel message)
+      {
+         hubManager.SendMessageTCP(new Broadcast { To = "GATEWAY", From = hubManager.LocalHubInfo.Id, Command = MessageTypes.BROADCAST, Id = hubManager.LocalHubInfo.Id, Content = message.Content });
+      }
+
+      ///// <summary>
+      ///// Basic echo method that can be used to verify connection.
+      ///// </summary>
+      ///// <param name="message">Any message to echo back.</param>
+      ///// <returns>Returns the same message supplied.</returns>
+      //public void Broadcast(MessageModel message)
+      //{
+      //   List<HubInfo> allConnections = hubManager.Connections.GetBroadcastConnections(false);
+
+      //   foreach (HubInfo conn in allConnections)
+      //   {
+      //      // Skip self.
+      //      if (conn.Id == hubManager.LocalHubInfo.Id)
+      //      {
+      //         continue;
+      //      }
+
+      //      var msg = new Message { From = message.PublicKey, To = "Everyone", Content = message.Message };
+      //      msg.From = hubManager.LocalHubInfo.Id;
+      //      msg.To = conn.Id;
+      //      msg.RecipientId = conn.Id;
+
+      //      hubManager.SendMessageTCP(msg);
+      //   }
+
+      //   //return Clients.Caller.SendAsync("Message", message);
+      //}
 
       //public Task Command(string type, string command, object[]? args)
       //{

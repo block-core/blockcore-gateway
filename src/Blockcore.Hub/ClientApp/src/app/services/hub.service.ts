@@ -18,10 +18,10 @@ export class HttpError extends Error {
 
 export class Message {
 
-   clientuniqueid: string;
-   type: string;
+   from: string;
    content: string;
-   date: Date;
+   // type: string;
+   // date: Date;
 
    constructor() {
 
@@ -44,13 +44,28 @@ export class HubService {
       this.startConnection();
    }
 
-   sendMessage(message: Message) {
-      this._hubConnection.invoke('Broadcast', message);
-   }
-
-   sendMessageToHubs(message: Message) {
+   /** Sends a broadcast message to directly connected hubs. */
+   broadcastToHubs(message: Message) {
       this._hubConnection.invoke('BroadcastToHubs', message);
    }
+
+   /** Sends a broadcast message to all hubs connected to the gateways. */
+   broadcastToHubsRelayed(message: Message) {
+      this._hubConnection.invoke('BroadcastToHubsRelayed', message);
+   }
+
+   /** Sends a broadcast message to connected gateways. */
+   broadcastToGateways(message: Message) {
+      this._hubConnection.invoke('BroadcastToGateways', message);
+   }
+
+   // sendMessage(message: Message) {
+   //    this._hubConnection.invoke('Broadcast', message);
+   // }
+
+   // sendMessageToHubs(message: Message) {
+   //    this._hubConnection.invoke('BroadcastToHubs', message);
+   // }
 
    connectToPeer(id: number) {
       this._hubConnection.invoke('ConnectToPeer', id);

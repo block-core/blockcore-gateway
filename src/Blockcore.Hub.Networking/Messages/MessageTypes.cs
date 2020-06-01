@@ -9,6 +9,7 @@ namespace Blockcore.Platform.Networking.Messages
       public static ushort KEEPALIVE = 3;
       public static ushort NOTIFY = 4;
       public static ushort REQ = 5;
+      public static ushort BROADCAST = 6;
       public static ushort TEST = 999;
    }
 }

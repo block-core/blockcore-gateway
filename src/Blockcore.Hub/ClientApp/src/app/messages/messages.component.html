@@ -216,6 +216,8 @@
    <mat-form-field class="message-input-full-width">
       <input matInput type="search" [(ngModel)]="message" placeholder="Type your message">
    </mat-form-field>
-   <button mat-button (click)=sendMessage()>Send</button>
+   <button mat-button (click)=broadcastToHubs()>Broadcast To Hubs</button>
+   <button mat-button (click)=broadcastToHubsRelayed()>Broadcast To Hubs (Relayed)</button>
+   <button mat-button (click)=broadcastToGateways()>Broadcast To Gatways</button>
 
 </mat-sidenav-container>

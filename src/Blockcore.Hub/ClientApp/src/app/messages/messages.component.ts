@@ -14,11 +14,34 @@ export class MessagesComponent {
   message: string;
   messages = [];
 
-  sendMessage() {
-    const msg = { self: true, clientuniqueid: '', date: new Date(), type: 'Broadcast', content: this.message};
+  broadcastToHubs() {
+    const msg = { self: true, from: 'me', content: this.message};
 
-    this.hub.sendMessage(msg);
-    this.hub.sendMessageToHubs(msg);
+    console.log('Msg:', msg);
+
+    this.hub.broadcastToHubs(msg);
+    this.messages.push(msg);
+
+    this.message = '';
+  }
+
+  broadcastToHubsRelayed() {
+    const msg = { self: true, from: 'me', content: this.message};
+
+    console.log('Msg:', msg);
+
+    this.hub.broadcastToHubsRelayed(msg);
+    this.messages.push(msg);
+
+    this.message = '';
+  }
+
+  broadcastToGateways() {
+    const msg = { self: true, from: 'me', content: this.message};
+
+    console.log('Msg:', msg);
+
+    this.hub.broadcastToGateways(msg);
     this.messages.push(msg);
 
     this.message = '';

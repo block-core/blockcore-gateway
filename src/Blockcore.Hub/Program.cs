@@ -16,7 +16,7 @@ namespace Blockcore.Hub
          //   CreateHostBuilder(args).Build().Run();
          //});
 
-         OpenBrowser("http://localhost:9912");
+         //OpenBrowser("http://localhost:9912");
 
          CreateHostBuilder(args).Build().Run();
 
