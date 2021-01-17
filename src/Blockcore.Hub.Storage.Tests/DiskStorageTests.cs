@@ -15,23 +15,11 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Blockcore.Hub.Networking.Entities;
 
 namespace Blockcore.Hub.Storage.Tests
 {
-   public class Profile
-   {
-      public string Id { get; set; }
 
-      public string Name { get; set; }
-
-      public string Shortname { get; set; }
-
-      public string Alias { get; set; }
-
-      public string Title { get; set; }
-
-      public DateTime Timestamp { get; set; }
-   }
 
    public class StorageTests
    {

@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Networking", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Gateway", "src\Blockcore.Gateway\Blockcore.Gateway.csproj", "{92FAE865-9396-4BF0-A08D-46F4CA738C68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Hub.Storage", "src\Blockcore.Hub.Storage\Blockcore.Hub.Storage.csproj", "{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Storage", "src\Blockcore.Hub.Storage\Blockcore.Hub.Storage.csproj", "{2FD55C83-2FAE-44E0-8E03-2529AD0162B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blockcore.Hub.Storage.Tests", "src\Blockcore.Hub.Storage.Tests\Blockcore.Hub.Storage.Tests.csproj", "{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockcore.Hub.Storage.Tests", "src\Blockcore.Hub.Storage.Tests\Blockcore.Hub.Storage.Tests.csproj", "{31A33EFA-8FDF-4C7F-9515-318EF12EE5EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
